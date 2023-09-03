@@ -1,3 +1,5 @@
+print(workspace)
+print(script)
 local presets = {["9286351750"]=1000000,["9999"]=1}
 local orbit_alt = presets[tostring(game.PlaceId)]
 print(orbit_alt)
