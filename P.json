@@ -1,2 +1,25 @@
-{"Test"}
-{"Test2"}
+local orbit_alt = .random()*-100000
+local presets = {["9286351750"]={1000000},["9999"]={1}}
+local orbit_alt = presets[game.PlaceId]
+script.Parent.BodyGyro.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
+while true do
+	local alt = script.Parent.Position.Y
+	script.Parent.BodyGyro.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
+	wait()
+	if alt == orbit_alt then
+		break
+	end
+	if script.Parent.AssemblyLinearVelocity.Y < 20 and script.Parent.Position.Y > 10000 then
+		script.Parent.BodyVelocity.MaxForce = Vector3.new(0, 3099999993722699776, 0)
+		break
+	end
+end
+while true do
+	wait(1)
+	if script.Parent.AssemblyLinearVelocity.Y < 20 then
+		script.Parent.BodyVelocity.MaxForce = Vector3.new(0, 3099999993722699776, 0)
+		break
+	end
+end
+print("Inserted")
+script.Enabled = false
