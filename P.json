@@ -1,6 +1,5 @@
-local orbit_alt = math.random()*-100000
-local presets = {["9286351750"]={1000000},["9999"]={1}}
-local orbit_alt = presets[game.PlaceId]
+local presets = {["9286351750"]=1000000,["9999"]=1}
+local orbit_alt = presets[tostring(game.PlaceId)]
 script.Parent.BodyGyro.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
 while true do
 	local alt = script.Parent.Position.Y
