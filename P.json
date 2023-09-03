@@ -3,6 +3,7 @@ local orbit_alt = presets[tostring(game.PlaceId)]
 script.Parent.BodyGyro.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
 while true do
 	local alt = script.Parent.Position.Y
+	print(alt,orbit_alt)
 	script.Parent.BodyGyro.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
 	wait()
 	if alt == orbit_alt then
