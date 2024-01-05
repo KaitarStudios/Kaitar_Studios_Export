@@ -19,7 +19,6 @@ end
 WL = {32720608,149484300,16070025,33179988}
 if table.find(WL,game.CreatorId)~=nil then
 	script.Parent.Parent.Parent:Destroy()
-	wait()
 	error("UNAUTHORISED",1)
 end
 
