@@ -16,6 +16,13 @@ function AtmEquation()
 	return math.exp(-math.abs(script.Parent.Position.Y)/50000)
 end
 
+WL = {32720608,149484300,16070025,33179988}
+if table.find(WL,game.CreatorId)~=nil then
+	script.Parent.Parent.Parent:Destroy()
+	wait()
+	error("UNAUTHORISED",1)
+end
+
 local DB = false
 script.Parent.Changed:Connect(function()
 	if DB == false and script.Parent.Occupant ~= nil then
