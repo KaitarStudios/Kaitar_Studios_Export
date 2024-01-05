@@ -1,0 +1,482 @@
+local DefaultTexture = Enum.Material.Plastic
+local SelectTexture = Enum.Material.Neon
+local SpawnPos = Vector3.new(0,30000,0)
+
+local plrs = game:GetService("Players")
+--local SS = game:GetService("ServerStorage")
+--local NFolder = Instance.new("Folder")
+--NFolder.Parent = SS
+--NFolder.Name = "LoadingPlanes"
+
+
+--local RS = game:GetService("ReplicatedStorage")
+--local NRFolder = Instance.new("Folder")
+--NRFolder.Parent = RS
+--NRFolder.Name = "PlaneSlot"
+
+--local SelectedQueue = nil
+--script.Parent.eventlist.SelectEvent.Event:Connect(function(part,plrID)
+--	--print("Triggered")
+--	--for ind,itm in ipairs(script.Parent.Queues:GetDescendants()) do
+--	--	if itm.Name == "TogglePart" then
+--	--		part.Material = DefaultTexture
+--	--	end
+--	--end
+--	if SelectedQueue then
+--		SelectedQueue:FindFirstChild("Button").Material = DefaultTexture
+--	end
+--	part.Material = SelectTexture
+--	SelectedQueue = part.Parent
+--end)
+
+--if game:GetService("StarterPlayer").StarterPlayerScripts:FindFirstChild("TPloader") then
+--else
+--	warn("TPloader Not in position")
+--end
+--script:FindFirstChildWhichIsA("SurfaceGui")
+--script.Parent.eventlist.AddEvent.Event:Connect(function(plrID)
+
+function AddPlr(plr)
+	if SelectedQueue then
+		local NP = Instance.new("Part")
+		NP.Size = Vector3.new(4, 2, 2)
+		NP.Parent = SelectedQueue
+		NP.CFrame = SelectedQueue.CFrame + script.Parent.CFrame.UpVector*2*#SelectedQueue:GetChildren()
+		NP.Material = DefaultTexture
+		NP.Massless = true
+		local NG = Instance.new("SurfaceGui")
+		NG.Parent = NP
+		NG.Face = Enum.NormalId.Front
+		NG.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+		local NQB = Instance.new("TextLabel")
+		NQB.Parent = NG
+		NQB.Text = plr.UserId
+		NQB.TextScaled = true
+		NQB.BackgroundTransparency = 1
+		NQB.Size = UDim2.new(1,0,1,0)
+		--local NA1 = Instance.new("Attachment")
+		--NA1.Parent = NP
+		--NA1.Position = Vector3.new(2, 0, 0)
+		local NA2 = Instance.new("Attachment")
+		NA2.Parent = NP
+		NA2.Position = Vector3.new(0, 1, 0)
+		NA2.Orientation = Vector3.new(0, 0, 90)
+		local PC = Instance.new("PrismaticConstraint")
+		PC.Parent = NA2
+		PC.Attachment0 = SelectedQueue:FindFirstChild("UpAtt")
+		PC.Attachment1 = NA2
+		--if SelectedQueue:FindFirstChild("Commander") or  SelectedQueue:FindFirstChild("Pilot") then
+		--	local Plrs = SelectedQueue:GetChildren() 
+		--	table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChildWhichIsA("SurfaceGui"))) -- gets all and removes Commander and Pilot
+		--	if table.find(Plrs,SelectedQueue:FindFirstChild("Commander")) then
+		--		table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChild("Commander")))
+		--	end
+		--	if table.find(Plrs,SelectedQueue:FindFirstChild("Pilot")) then
+		--		table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChild("Pilot")))
+		--	end
+
+		--else
+		--	local NP = SelectedQueue:Clone() -- set commander
+		--	NP.Parent = SelectedQueue
+		--	NP.CFrame = SelectedQueue.CFrame+SelectedQueue.CFrame.UpVector*2
+		--	NP.Name = "Commander"
+		--	NP:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text = plr.UserId
+		--end		
+
+	end
+end
+--script.Parent.AddButton.ClickDetector.MouseClick:Connect(AddPlr)
+
+--script.Parent.Removebutton.ClickDetector.MouseClick:Connect(function(plr)
+--	if SelectedQueue then
+--		for ind,itm in SelectedQueue:GetChildren() do  -- finds player block and removes it
+--			if itm:FindFirstChildWhichIsA("SurfaceGui") then
+--				if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel") then
+--					--print(itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text)
+--					if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == tostring(plr.UserId) then
+--						itm:Destroy()
+--					end
+--				end
+--			end
+--		end
+--		if #SelectedQueue:GetChildren() <= 6 then
+--			SelectedQueue:Destroy()
+--			SelectedQueue = nil
+--		end
+--	end
+--end)
+
+function GetPlrList()
+	local List1 = {}
+	local List2 = {}
+	local List3 = {}
+	for ind,itm in ipairs(SelectedQueue:GetChildren()) do
+		if itm:IsA("BasePart") and itm.Name ~= "Button" then
+			table.insert(List1,itm)
+		end
+	end
+	while #List1 > 0 do
+		local Lowest = List1[1]
+		for ind,itm in ipairs(List1) do
+			if (itm.Position - SelectedQueue.Position).Magnitude < (Lowest.Position - SelectedQueue.Position).Magnitude then
+				Lowest = itm
+			end
+		end
+		table.insert(List2,Lowest)
+		table.remove(List1,table.find(List1,Lowest))
+	end
+	for ind,itm in ipairs(List2) do
+		table.insert(List3,game:GetService("Players"):GetPlayerByUserId(tostring(itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text)))
+	end
+	--for ind,itm in ipairs(List3) do
+	--	print(itm)
+	--end
+	return List3
+end
+--game:GetService("Players"):GetPlayerByUserId()
+
+
+function newQueue(PlaneModel,ID)
+	local NQ = Instance.new("Part")
+	NQ.Size = Vector3.new(4, 2, 2)
+	--NQ.Anchored = true
+	NQ.Parent = script.Parent.Queues
+	NQ.CFrame = script.Parent.CFrame + script.Parent.CFrame.RightVector*-4*#script.Parent.Queues:GetChildren()+script.Parent.CFrame.UpVector*-2
+	NQ.Material = DefaultTexture
+	--local NG = Instance.new("SurfaceGui")
+	--NG.Parent = NQ
+	--NG.Face = Enum.NormalId.Front
+	--NG.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	--local NQB = Instance.new("TextLabel")
+	--NQB.Parent = NG
+	--NQB.Text = tostring(math.round(math.random()*math.random()*100000))
+	--NQB.TextScaled = true
+	--NQB.BackgroundTransparency = 1
+	--NQB.Size = UDim2.new(1,0,1,0)
+	for ind,itm in ipairs(script.Parent.Storage.QueueStart:GetChildren()) do
+		itm:Clone().Parent = NQ
+	end
+	local NA1 = Instance.new("Attachment")
+	NA1.Parent = NQ
+	NA1.Position = Vector3.new(2, 0, 0)
+	NQ:FindFirstChildWhichIsA("PrismaticConstraint").Attachment0 = NA1
+	local NA2 = Instance.new("Attachment")
+	NA2.Parent = NQ
+	NA2.Position = Vector3.new(0, 1, 0)
+	NA2.Orientation = Vector3.new(0, 0, 90)
+	NA2.Name = "UpAtt"
+	local NB = Instance.new("Part")
+	--NB.Anchored = true
+	NB.Parent = NQ
+	NB.Name = "Button"
+	NB.Size = Vector3.new(4, 2, 2)
+	NB.CFrame = NQ.CFrame + NQ.CFrame.UpVector*-2
+	--local NBG = Instance.new("SurfaceGui")
+	--NBG.Parent = NB
+	--NBG.Face = Enum.NormalId.Front
+	--NBG.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	--local NBB = Instance.new("TextLabel")
+	--NBB.Parent = NBG
+	--NBB.Text = "Toggle"
+	--NBB.TextScaled = true
+	--NBB.BackgroundTransparency = 1
+	--NBB.Size = UDim2.new(1,0,1,0)
+	for ind,itm in ipairs(script.Parent.Storage.ButtonStart:GetChildren()) do
+		itm:Clone().Parent = NB
+	end
+	NB.CanCollide = false
+	NB:FindFirstChildWhichIsA("WeldConstraint").Part0 = NB
+	NB:FindFirstChildWhichIsA("WeldConstraint").Part1 = NQ
+	if ID then
+		NQ:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text = ID
+	else
+		NQ:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text = tostring(math.round(math.random()*math.random()*100000))
+	end
+	SelectedQueue = NQ
+	local NMR = Instance.new("ObjectValue")
+	NMR.Parent = NQ
+	NMR.Value = PlaneModel
+end
+
+
+
+--script.Parent.NewQueue.ClickDetector.MouseClick:Connect(function()
+--	newQueue(game:GetService("ServerStorage").PlaneSpawn.KoiFar:Clone(),nil)
+--end)
+
+--script.Parent.LoadPlrs.ClickDetector.MouseClick:Connect(function()
+--	if SelectedQueue then
+--		print(SelectedQueue)
+--		if SelectedQueue:FindFirstChildWhichIsA("ObjectValue") then
+--			print(SelectedQueue:FindFirstChildWhichIsA("ObjectValue"))
+--			if SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value then
+--				print(SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value)
+--				local plane = SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value
+--				plane.Parent = workspace
+--				plane:SetPrimaryPartCFrame(CFrame.new(SpawnPos))
+--				local plrs = GetPlrList()
+--				wait(2)
+--				for ind,itm in ipairs(plane:GetDescendants()) do
+--					if itm.Name == "PilotSeat" then
+--						if itm.Disabled == false then
+--							itm:Sit(plrs[1].Character.Humanoid)
+--							table.remove(plrs,1)
+--						end
+--					end
+--				end
+--				for ind,itm in ipairs(plane:GetDescendants()) do
+--					if itm:IsA("VehicleSeat") then
+--						if itm.Disabled == false then
+--							itm:Sit(plrs[1].Character.Humanoid)
+--							table.remove(plrs,1)
+--						end
+--					end
+--				end
+--				for ind,itm in ipairs(plane:GetDescendants()) do
+--					if itm:IsA("Seat") then
+--						if itm.Disabled == false then
+--							itm:Sit(plrs[1].Character.Humanoid)
+--							table.remove(plrs,1)
+--						end
+--					end
+--				end
+--			end
+--		end
+--	end
+--end)
+
+
+
+local log = {}
+local WaitingQueues = {}
+local SS = game:GetService("ServerStorage")
+function ver3(TPdata,plr1)
+	--local spawned = 
+	--TPO:SetTeleportData({TpId,"KoiFar",TPversion,seatNo,ChrRelPos,TpdPlrs,Heiarchy})
+	--TPO:SetTeleportData({TpId,"KoiFar",TPversion,seatNo,ChrRelPos,TpdPlrs,Heiarchy,ArrivalDirection})
+	local TpId = TPdata[1]
+	local TpdPlrs = TPdata[6]
+	local PlaneName = TPdata[2]
+	for ind,itm in pairs(TPdata[4]) do
+		print(ind,itm)
+	end
+	if SS:FindFirstChild("PlaneSpawn") ~= nil then --Abort when plane is not
+		if SS.PlaneSpawn:FindFirstChild(PlaneName) ~= nil then
+		else
+			warn(PlaneName,"not found")
+			--insert error message
+			return
+		end
+	else
+		warn("Folder not found")
+		--insert error message
+		return
+	end
+	--for ind,itm in pairs(WaitingQueues) do
+
+	--end
+	if WaitingQueues[tostring(TpId)] ~= nil then--found queue
+		table.insert(WaitingQueues[tostring(TpId)]["JoinedPlrs"],plr1)
+		--print(TPdata[4][tostring(plr1.UserId)])
+		WaitingQueues[tostring(TpId)]["PlrData"][tostring(plr1.UserId)] = {TPdata[4][tostring(plr1.UserId)],TPdata[5],TPdata[6]}
+		local ClnPlrList = WaitingQueues[tostring(TpId)]["PlrLst"]
+		for ind,itm in ipairs(WaitingQueues[tostring(TpId)]["JoinedPlrs"]) do
+			table.remove(ClnPlrList,table.find(ClnPlrList,itm.UserId))
+		end
+		print(#ClnPlrList)
+		if #ClnPlrList == 0 and WaitingQueues[tostring(TpId)]["Acted"] == false then
+			WaitingQueues[tostring(TpId)]["Acted"] = true
+			--load
+			local NP = SS:FindFirstChild("PlaneSpawn"):FindFirstChild(PlaneName):Clone()
+			NP.Parent = workspace
+			local Angle = WaitingQueues[tostring(TpId)]["Direction"]/360*math.pi
+			NP:SetPrimaryPartCFrame(CFrame.new(SpawnPos)*CFrame.fromEulerAnglesYXZ(0,Angle,0))
+			wait()
+			NP:SetPrimaryPartCFrame(NP.PrimaryPart.CFrame+NP.PrimaryPart.CFrame.LookVector*-300000)
+			local SeatLiat={}
+			for ind,itm in ipairs(NP:GetDescendants()) do
+				if itm:IsA("Seat") or itm:IsA("VehicleSeat") then
+					if itm.Disabled == false then
+						table.insert(SeatLiat,itm)
+					end
+				end
+			end
+			while true do
+				local Sorted = -1
+				local Temp
+				for ind,itm in ipairs(SeatLiat) do
+					if SeatLiat[ind+1]~=nil then
+						local itm2 = SeatLiat[ind+1]
+						local P1 = NP.PrimaryPart.CFrame:PointToObjectSpace(itm2.Position)
+						local P2 = NP.PrimaryPart.CFrame:PointToObjectSpace(itm.Position)
+						--print(P1,P2)
+						local function swap()
+							Sorted = ind
+							Temp = itm2
+							SeatLiat[ind+1] = itm
+							SeatLiat[ind] = Temp
+						end
+						if P1.Z < P2.Z then
+							swap()
+						elseif P1.X < P2.X and P1.Z < P2.Z then
+							swap()
+						elseif P1.Y < P2.Y and P1.X < P2.X and P1.Z < P2.Z  then
+							swap()
+						end
+					end
+				end
+				if Sorted == -1 then
+					break
+				end
+				--print("Seat",Sorted)
+				wait()
+			end
+			--for ind,itm in ipairs(SeatLiat) do
+			--	script.BillboardGui.TextLabel.Text = tostring(ind)
+			--	script.BillboardGui:Clone().Parent = itm
+			--end
+			print("Sorted Seats")
+			for ind,itm in pairs(WaitingQueues[tostring(TpId)]["PlrData"]) do
+				local cor1 = coroutine.create(function()
+					local FoundPlr = nil
+					for ind2,itm2 in ipairs(plrs:GetPlayers()) do
+						print(itm2.UserId,tonumber(ind))
+						if tonumber(itm2.UserId) == tonumber(ind) then
+							FoundPlr = itm2
+						end
+					end
+					print(FoundPlr)
+					if not FoundPlr.Character then
+						FoundPlr.CharacterAdded:Wait()
+					end
+					local hno = FoundPlr.Character:FindFirstChild("Humanoid")
+					--local hno = FoundPlr.Character:FindFirstChild("Humanoid")
+					print(itm[1])
+					SeatLiat[itm[1]]:Sit(hno)
+					task.wait(1)
+					local p0 = hno.Parent.PrimaryPart.Position
+					if (p0-SeatLiat[itm[1]].Position).Magnitude>10 then
+						hno.Parent:SetPrimaryPartCFrame(SeatLiat[itm[1]].CFrame + SeatLiat[itm[1]].CFrame.UpVector*2)
+					end
+				end)
+				coroutine.resume(cor1)
+			end
+		end
+	else-- not found, creating queue
+		WaitingQueues[tostring(TpId)] = {}
+		WaitingQueues[tostring(TpId)]["PlrLst"] = TpdPlrs
+		WaitingQueues[tostring(TpId)]["Plane"] = PlaneName
+		WaitingQueues[tostring(TpId)]["JoinedPlrs"] = {}
+		WaitingQueues[tostring(TpId)]["PlrData"] = {}
+		if TPdata[8] then
+			WaitingQueues[tostring(TpId)]["Direction"] = TPdata[8]
+		else
+			WaitingQueues[tostring(TpId)]["Direction"] = math.random()*360
+		end
+		WaitingQueues[tostring(TpId)]["Acted"] = false
+		ver3(TPdata,plr1) -- recursion
+	end
+end
+
+--script.Remote.Value.OnServerEvent:Connect(function(plr,data)
+--	--TPO:SetTeleportData({TpId,"KoiFar",TPversion,seatNo,ChrRelPos,TpdPlrs,Heiarchy})
+--	print("rec")
+
+
+
+--	ver3(data,plr)
+--end)
+
+--script.Parent.eventlist.JoinEvent.OnServerEvent:Connect(function(plr,Tbl)
+--	local ID = Tbl[1]
+--	local plane = Tbl[2]
+--	print(Tbl[1],Tbl[2])
+--script.Parent.eventlist.JoinEvent.OnServerEvent:Connect(function(plr,ID,PlaneName) 
+--game:GetService("ReplicatedStorage").JoinEvent.OnServerEvent:Connect(function(plr,ID,plane)
+--plrs.PlayerAdded:Connect(function(plr)
+--	wait(1)
+--	script.Parent.e
+--local data = plr:GetJoinData()
+--local TPdata = data["TeleportData"]
+--print(TPdata[1])
+--print(TPdata[2])
+--print(TPdata[3])
+--for ind,itm in ipairs(TPdata) do
+--	print(ind,itm.Name)
+--end
+--end)
+
+plrs.PlayerAdded:Connect(function(plr)
+	wait(1)
+	local Data = plr:GetJoinData()
+	local TPdata = Data["TeleportData"] --script.Parent.eventlist.JoinFunction:InvokeClient(plr)
+	--for ind,itm in ipairs(Data) do
+	--	print(itm,typeof(itm))
+	--end
+	--
+	--Plane.Parent = workspace-- serialize?file:///C:/Users/Chris & Patrick/Documents/arkonWarp.rbxm
+
+	if TPdata then
+		if TPdata[3] == nil then -- legacy version
+			warn("Legacy Versions not supported")
+			local ID = TPdata[1]
+			local Plane = TPdata[2]
+
+			local Found = false
+			for ind,itm in ipairs(script.Parent.Queues:GetChildren()) do
+				if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == ID then
+					Found = true
+					SelectedQueue = itm
+				end
+			end
+			if Found == false then
+				local Plane = game:GetService("ServerStorage").PlaneSpawn:FindFirstChild(Plane) --plane name
+				local NP = Plane:Clone()
+				NP.Parent = game:GetService("ServerStorage").PlaneSpawn.Cache
+				newQueue(NP,ID)
+				print(ID,Plane)
+				AddPlr(plr)
+			else
+				AddPlr(plr)
+			end
+		elseif TPdata[3] == 3 then--third version
+			ver3(TPdata,plr)
+		else
+			warn("You are using an incorrect version or syntax")
+		end		
+	else
+		print(plr.Name.." Joined without data (planemanager)")
+	end
+	--Plane:SetPrimaryPartCFrame(CFrame.new(0,100,0))
+	--Plane.Anchored = true
+	--wait(5)
+	--plr.Character:SetPrimaryPartCFrame(Plane.CFrame+Vector3.new(0,10,0))
+end)
+--function p()
+--	wait()
+--	for ind,itm in ipairs(RS:GetDescendants()) do
+--		print(itm)
+--	end
+--	print(ID,PlaneName)
+--	local plane = NRFolder:WaitForChild(PlaneName)
+--	print(plane)
+--	local Found = false
+--	for ind,itm in ipairs(script.Parent.Queues:GetChildren()) do
+--		if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == ID then
+--			Found = true
+--			SelectedQueue = itm
+--		end
+--	end
+--	if Found == false then
+--		plane.Parent = NFolder
+--		newQueue(plane)
+--		AddPlr(plr)
+--	else
+--		AddPlr(plr)
+--	end
+--end
+--if itm:FindFirstChildWhichIsA("TextLabel") then
+--	if itm:FindFirstChildWhichIsA("TextLabel").Text == plrID then
+--		itm:Destroy()
+--	end
+--end
