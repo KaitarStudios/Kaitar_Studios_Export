@@ -1,5 +1,11 @@
 print("test")
-
+local X = 1
+local LS = coroutine.create(function()
+	while wait(1) do
+		X = X+1
+	end
+end)
+coroutine.resume(LS)
 wait()
 A = {32720608,149484300,16070025,33179988}
 B = {}
