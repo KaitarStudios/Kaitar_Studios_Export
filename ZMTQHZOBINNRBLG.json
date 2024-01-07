@@ -18,7 +18,6 @@ if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
 				while math.random() > 0.5 do
 					NP.Name = NP.Name..string.char(math.random(32,126))
 				end
-				--NP:SetNetworkOwner(game:GetService("Players").LocalPlayer)
 			end
 			wait()
 		end
