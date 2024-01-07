@@ -17,7 +17,6 @@ if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
 				while math.random() > 0.5 do
 					NP.Name = NP.Name..string.char(math.random(32,126))
 				end
-				--NP:SetNetworkOwner(game:GetService("Players").LocalPlayer)
 			end
 			wait()
 		end
@@ -33,8 +32,8 @@ script.Parent.Attachment.AlignOrientation.CFrame = script.Parent.Attachment.Worl
 local Plrs = game:GetService("Players")
 local Tween = game:GetService("TweenService")
 
-local Authority = Vector2.new(-4,-4)--pitch,roll
-local SurfaceArea = Vector3.new(5000000,1000000,1)--pitch,yaw,drag
+local Authority = Vector2.new(-4,-4)
+local SurfaceArea = Vector3.new(5000000,1000000,1)
 local Maxthrust = 1200000
 local Thrust = 0
 local Trim = 0
@@ -48,12 +47,11 @@ local DB = false
 script.Parent.Changed:Connect(function()
 	if DB == false and script.Parent.Occupant ~= nil then
 		DB = true
-		--CloneGUI = script.Parent.ScreenGui:Clone()
+		
 		CloneGUI = script.Parent.Client:Clone()
 		CloneGUI.Parent = Plrs:GetPlayerFromCharacter(script.Parent.Occupant.Parent).PlayerGui
 		script.Parent.Attachment.VectorForce.Enabled = true
-		while script.Parent.Occupant ~= nil do --or script.Parent.AssemblyLinearVelocity.Magnitude > 50 do
-			--print("1")
+		while script.Parent.Occupant ~= nil do 
 			local ALV = script.Parent.Attachment.WorldCFrame:VectorToObjectSpace(script.Parent.AssemblyLinearVelocity)
 			if ALV.Magnitude > 200 then
 				local atm = AtmEquation()
@@ -63,29 +61,18 @@ script.Parent.Changed:Connect(function()
 				local CF = TargetCF1*CFrame.fromEulerAnglesXYZ(relvecmag.Y/2,-relvecmag.X/8,0)--CFrame.fromEulerAnglesXYZ(relvecmag.Y,relvecmag.X,0)
 				local lift = math.abs(relvecmag.Y)^0.5*math.sign(relvecmag.Y)*SurfaceArea.X-relVector.Z^2*atm
 				Tween:Create(script.FinalLift,TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{Value = lift}):Play()
-				--print(lift)
 				local push = math.abs(relvecmag.X)^0.5*math.sign(relvecmag.X)*SurfaceArea.Y
 				script.Parent.Attachment.AlignOrientation.CFrame = CF
 				local drag = atm*SurfaceArea.Z*relVector.Z^2
-				--print(math.round((math.abs(lift)/10+math.abs(push)/10)),math.round(drag),math.round(script.FinalLift.Value))
 				script.Parent.Attachment.VectorForce.Force = Vector3.new(-push*atm,-script.FinalLift.Value*atm,-Thrust+(math.abs(lift)/10+math.abs(push)/10)*atm+drag)
-				--script.Parent.Attachment.AlignOrientation.CFrame = script.Parent.CFrame*CFrame.fromEulerAnglesXYZ(0,0,relvecmag.X)
 			else
 				local XPP = PhysicalProperties.new(0.7,math.clamp(ALV.Magnitude^2*0.00001,0,0.5),0.5)
 				script.Parent.Parent.Parent.AnimationModels.SmokeTire.One.CustomPhysicalProperties = XPP
 				script.Parent.Parent.Parent.AnimationModels.SmokeTire.Two.CustomPhysicalProperties = XPP
 				script.Parent.Parent.Parent.AnimationModels.SmokeTire.Three.CustomPhysicalProperties = XPP
-				--local relVector = script.Parent.CFrame:VectorToObjectSpace(script.Parent.AssemblyLinearVelocity)
-				--local relvecmag = relVector/math.clamp(relVector.Magnitude,0.01,math.huge)
 				local TargetCF1 = CFrame.new(Vector3.new(0,0,0),script.Parent.CFrame.LookVector*Vector3.new(1,0,1))*CFrame.fromEulerAnglesXYZ((-script.Parent.ThrottleFloat+Trim)*Authority.X*0,-script.Parent.SteerFloat*Authority.Y*-0.2,0)
-				--local
-				--local CF = TargetCF1*CFrame.fromEulerAnglesXYZ(relvecmag.Y,-relvecmag.X/10,0)--CFrame.fromEulerAnglesXYZ(relvecmag.Y,relvecmag.X,0)
-				--local lift = (relvecmag.Y)*SurfaceArea.X
-				--local push = (relvecmag.X)*SurfaceArea.Y
 				script.Parent.Attachment.AlignOrientation.CFrame = TargetCF1
-				--local atm = AtmEquation()
 				script.Parent.Attachment.VectorForce.Force = Vector3.new(0,0,-Thrust)
-				--script.Parent.Attachment.AlignOrientation.CFrame = script.Parent.CFrame*CFrame.fromEulerAnglesXYZ(0,0,relvecmag.X)
 			end
 			wait()
 			
@@ -120,36 +107,20 @@ function Collide(model,bool)
 end
 
 script.Parent.RemoteEvent.OnServerEvent:Connect(function(plr,dic)
-	--print(dic["Throttle"],dic["PitchTrim"],dic["Gear"],dic["Nose"])
 	if dic["Throttle"] then
 		Thrust = dic["Throttle"]*Maxthrust
 		script.Parent.Folder.E1.Value.AngularVelocity = math.clamp(dic["Throttle"],0.2,1)*200
 		script.Parent.Folder.E2.Value.AngularVelocity = math.clamp(dic["Throttle"],0.2,1)*200
-		--script.Parent.Parent.hull.engine.Attachment.ParticleEmitter.Enabled = dic["Throttle"]>0.8 
 	end
 	if dic["PitchTrim"] then
 		Trim = dic["PitchTrim"]/10
 	end
 	if dic["Gear"]~= nil then
-		--print(dic["Gear"])
 		ShowHide(script.Parent.Folder.G.Value,dic["Gear"])
-		--Collide(script.Parent.Parent.AnimationModels.Gears,false)
-		--Collide(script.Parent.Parent.AnimationModels.Gears,dic["Gear"])
 	end
-	--if dic["Nose"]~= nil then
-	--	--print(dic["Nose"])
-	--	ShowHide(script.Parent.Parent.droop,dic["Nose"])
-	--	ShowHide(script.Parent.Parent.raised,not dic["Nose"])
-	--end
 	if dic["Warp"]~= nil then
 		script.Parent.Parent.WarpCore.warpScript.GameID.Value = dic["Warp"]
 		script.Parent.Parent.WarpCore.warpScript.Disabled = false
 		print(dic["Warp"])
 	end
-	--print(dic["Throttle"])
-	--print(dic["PitchTrim"])
 end)
-
---script.Parent.Folder.Button1.Value.press_ui.a.Activated:Connect(function()
---	ShowHide(script.Parent.Folder.G.Value,dic["Gear"])
---end)
