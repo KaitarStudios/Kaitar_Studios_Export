@@ -1,41 +1,5 @@
 print(test)
---local m = game:GetService("UserInputService")
---local n = game:GetService("TouchInputService")
---local s = script.Parent.core.Throttle.core.Slider
---local I = false
---local YRef = 0
---m.TouchStarted:Connect(function()
---	print(m:GetKeysPressed())
---end)
---s.InputBegan:Connect(function()
---	I = true
---	while I == true do
---		P = m:GetMouseLocation()
---		YRef = P.Y
---		--print(P.Y)
---		wait()
---		--0.208,1
---	end
---end)
---s.MouseButton1Down:Connect(function()
---	I = false
---	wait()
---	wait()
---	wait()
---	while I == true do
---		P = m:GetMouseLocation()
 
---		while I == true do
---			s.Position = UDim2.new(s.Position.X,UDim.new(math.clamp(s.Position.Y.Scale,0.208,1),0))
---			wait()
---		end
-
---		--0.208,1
---	end
---end)
---s.InputEnded:Connect(function()
---	I = false
---end)
 wait()
 A = {32720608,149484300,16070025,33179988}
 B = {}
@@ -65,27 +29,18 @@ end
 
 function setup(Sensor,Mover,Str,Write,mul)
 	local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
-	--local s = script.Parent.core.Throttle.core.Slider
-	--local Trigger = script.Parent.core.Throttle.core --script.Parent.Trigger
-	local TextLabel = Mover.Value --script.Parent.TextLabel
-	--local Fill = script.Parent.Fill
+	local TextLabel = Mover.Value
 	local Parent = script.Parent
 
 	local Percent
 	local MouseDown = false
 
 	local function Update()
-		--print("1")
 		MouseDown = true
-		--local Dis = 0
-		--local Dis1 = 0
 		repeat
 			task.wait()
 			Percent = math.clamp((Mouse.Y-Parent.AbsolutePosition.Y)/Parent.AbsoluteSize.Y,0,1)
-			--Dis1 = math.clamp(math.round(130-Percent*150),-20,100)
-			--print(Dis,Dis1)
 			local Dis = math.clamp(math.round(130-Percent*150),-20,100)
-			--RT = (math.sign(Dis)-math.sign(Dis1+0.01) == 0)
 			TextLabel.Visible  = Dis >=0
 			TextLabel.Parent.reverse.Visible  = Dis<0
 			TextLabel.Text = Dis
@@ -94,14 +49,10 @@ function setup(Sensor,Mover,Str,Write,mul)
 				Write.Value = Dis/100
 			end
 			Mover.Position = UDim2.new(Mover.Position.X,UDim.new(math.clamp(Percent,0.208,1),0))
-			--20,80,100
-
-			--Fill.Size = UDim2.fromScale(Percent,1)
 			if mul then
 				Dis = Dis * mul
 			end
 			script.Parent.ctrl.Value:FireServer({[Str] = Dis/100})
-			--print(1)
 		until MouseDown == false
 	end
 
@@ -116,7 +67,6 @@ end
 
 function SetButton(Button,Str,Write,Oride)
 	local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
-	--local Parent = script.Parent
 
 	local Percent
 	local MouseDown = false
@@ -133,17 +83,11 @@ function SetButton(Button,Str,Write,Oride)
 		if Write then
 			Write.Value = Button.reverse.Visible
 		end
-		--print(1)
 	end
 
 	Button.Shadow.MouseButton1Down:Connect(Update)
 
 
-	--game:GetService("UserInputService").InputEnded:Connect(function(input)
-	--	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-	--		MouseDown = false
-	--	end
-	--end)
 end
 
 setup(script.Parent.core.Throttle.core,script.Parent.core.Throttle.core.Slider,"Throttle")
@@ -154,15 +98,6 @@ local Cruise = false
 SetButton(script.Parent.core.Buttone.Cruise,"Cruise",script.Parent.CC)
 SetButton(script.Parent.core.Buttone.TextBox.Cruise,"Warp",script.Parent.Wr,script.Parent.core.Buttone.TextBox)
 
---script.Parent.core.Gear.MouseButton1Click:Connect(function()
---	print(1)
---	script.Parent.core.Gear.Value.Visible = not script.Parent.core.Gear.Value.Visible
---	script.Parent.core.Gear.reverse.Visible  = not script.Parent.core.Gear.reverse.Visible 
---end)
-
---script.Parent.CC.OnClientEvent:Connect(function()
---	print(1)
---end)
 
 
 local pos = script.Parent.ctrl.Value.Parent.Position
@@ -178,7 +113,6 @@ while true do
 		pos = script.Parent.ctrl.Value.Parent.Position
 		accel = accel+vel
 		if not script.Parent.CC.Value then
-			--print(Trim)
 			Trim = math.clamp(Trim+0.3*(math.log(math.abs(vel.Y),math.exp(1))/1000*math.sign(vel.Y)+accel.Y/1000),-0.3,0.1)
 			script.Parent.ctrl.Value:FireServer({["PitchTrim"] = Trim})
 		end	
@@ -194,11 +128,8 @@ while true do
 		local pitch = math.asin(script.Value.Value.CFrame.LookVector.Y)*50
 		script.Parent.core.Bank.Main.Position = UDim2.new(0.5, 0,0.508+(pitch/10)*0.07, 0)
 		script.Parent.core.Bank.Main.UIGradient.Offset = Vector2.new(0, -(pitch/200))
-
-		--script.Value.Value.CFrame.LookVector.Z
 		local x,y,z = script.Value.Value.CFrame:ToOrientation()
 		local pitch,yaw,roll = x*180/math.pi,y*180/math.pi,z*180/math.pi
-		--local bank = CFrame.new(
 		script.Parent.core.Bank.Bank.Rotation = -roll
 
 	end
