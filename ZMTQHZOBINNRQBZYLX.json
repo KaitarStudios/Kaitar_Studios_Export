@@ -58,7 +58,7 @@ script.Parent.Changed:Connect(function()
 				local relVector = ALV
 				local relvecmag = relVector/math.clamp(relVector.Magnitude,0.01,math.huge)
 				local TargetCF1 = script.Parent.Attachment.WorldCFrame*CFrame.fromEulerAnglesXYZ((-script.Parent.ThrottleFloat+Trim)*Authority.X,0,-script.Parent.SteerFloat*Authority.Y)
-				local CF = TargetCF1*CFrame.fromEulerAnglesXYZ(relvecmag.Y/2,-relvecmag.X/8,0)--CFrame.fromEulerAnglesXYZ(relvecmag.Y,relvecmag.X,0)
+				local CF = TargetCF1*CFrame.fromEulerAnglesXYZ(relvecmag.Y/2,-relvecmag.X/8,0)
 				local lift = math.abs(relvecmag.Y)^0.5*math.sign(relvecmag.Y)*SurfaceArea.X-relVector.Z^2*atm
 				Tween:Create(script.FinalLift,TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{Value = lift}):Play()
 				local push = math.abs(relvecmag.X)^0.5*math.sign(relvecmag.X)*SurfaceArea.Y
