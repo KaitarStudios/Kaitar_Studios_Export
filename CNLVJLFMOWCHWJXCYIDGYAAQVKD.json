@@ -215,7 +215,7 @@ function ver3(TPdata,plr1)
 			WaitingQueues[tostring(TpId)]["Direction"] = math.random()*360
 		end
 		WaitingQueues[tostring(TpId)]["Acted"] = false
-		ver3(TPdata,plr1) -- recursion
+		ver3(TPdata,plr1) 
 	end
 end
 
@@ -247,10 +247,10 @@ end
 plrs.PlayerAdded:Connect(function(plr)
 	wait(1)
 	local Data = plr:GetJoinData()
-	local TPdata = Data["TeleportData"] --script.Parent.eventlist.JoinFunction:InvokeClient(plr)
+	local TPdata = Data["TeleportData"]
 
 	if TPdata then
-		if TPdata[3] == nil then -- legacy version
+		if TPdata[3] == nil then
 			warn("Legacy Versions not supported")
 			local ID = TPdata[1]
 			local Plane = TPdata[2]
