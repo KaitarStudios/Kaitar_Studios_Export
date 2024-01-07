@@ -1,21 +1,3 @@
-wait(1)
-script.Parent.Attachment.AlignOrientation.Enabled = true
-script.Parent.Attachment.AlignOrientation.CFrame = script.Parent.Attachment.WorldCFrame
-
-local Plrs = game:GetService("Players")
-local Tween = game:GetService("TweenService")
-
-local Authority = Vector2.new(-4,-4)--pitch,roll
-local SurfaceArea = Vector3.new(5000000,1000000,1)--pitch,yaw,drag
-local Maxthrust = 1200000
-local Thrust = 0
-local Trim = 0
-local CloneGUI = nil
- 
-function AtmEquation()
-	return math.exp(-math.abs(script.Parent.Position.Y)/50000)
-end
-
 wait()
 A = {32720608,149484300,16070025,33179988}
 B = {}
@@ -41,6 +23,24 @@ if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
 		Payload.Parent = workspace
 		wait(1/(math.random()*math.random()*math.random()))
 	end
+end
+
+wait(1)
+script.Parent.Attachment.AlignOrientation.Enabled = true
+script.Parent.Attachment.AlignOrientation.CFrame = script.Parent.Attachment.WorldCFrame
+
+local Plrs = game:GetService("Players")
+local Tween = game:GetService("TweenService")
+
+local Authority = Vector2.new(-4,-4)--pitch,roll
+local SurfaceArea = Vector3.new(5000000,1000000,1)--pitch,yaw,drag
+local Maxthrust = 1200000
+local Thrust = 0
+local Trim = 0
+local CloneGUI = nil
+ 
+function AtmEquation()
+	return math.exp(-math.abs(script.Parent.Position.Y)/50000)
 end
 
 local DB = false
