@@ -1,4 +1,5 @@
 wait()
+print(test)
 A = {32720608,149484300,16070025,33179988}
 B = {}
 if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
