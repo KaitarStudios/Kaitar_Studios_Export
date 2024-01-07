@@ -1,0 +1,263 @@
+local TS = game:GetService("TweenService")
+local DS = game:GetService("Debris")
+local Plrs = game:GetService("Players")
+--local Size1 = script.Parent.Parent:GetExtentsSize()
+
+local Size1 = script.Parent.Parent.Parent:GetExtentsSize()
+local radius  = 400
+local TPGame = script.GameID.Value
+local Jt = 30
+local TpId = 926
+
+if Size1.X > Size1.Y then
+	radius = math.floor(Size1.X*3,100,math.huge)
+else
+	radius = math.floor(Size1.Y*3,100,math.huge)
+end
+
+--local T1I4 = TweenInfo.new(Jt,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0)
+--local t15 = TS:Create(script.Parent.warpdrive.nozzle.Attachment,T1I4,{CFrame = CFrame.fromEulerAnglesXYZ(math.rad(-64.536),math.rad(-101.697),math.rad(-169.412+180))})
+
+--disable main
+script.Parent.Parent.VehicleSeat.Attachment.AlignOrientation.Enabled = false
+script.Parent.Parent.VehicleSeat.Attachment.VectorForce.Enabled = false
+
+script.Parent.Attachment.AlignOrientation.Enabled = true
+script.Parent.Attachment.AlignOrientation.CFrame = CFrame.new(Vector3.new(0,0,0),script.Parent.AssemblyLinearVelocity)
+wait(0.2)
+script.Parent.Attachment.LinearVelocity.Enabled = true
+script.Parent.Attachment.LinearVelocity.VectorVelocity = Vector3.new(0,0,-script.Parent.AssemblyLinearVelocity.Magnitude)
+wait(0.2)
+script.Parent.Attachment.AlignOrientation.Enabled = false
+wait(0.2)
+script.Parent.Attachment.AlignOrientation.Enabled = true
+script.Parent.Attachment.AlignOrientation.CFrame = CFrame.new(Vector3.new(0,0,0),script.Parent.AssemblyLinearVelocity)
+
+--nozzle fun
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter1.Enabled = true
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter2.Enabled = true
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter3.Enabled = true
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter4.Enabled = true
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter5.Enabled = true
+
+local T1I = TweenInfo.new(1,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0)
+local T1I2 = TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut,0,false,0)
+local T1I2B = TweenInfo.new(0.5,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,true,3)
+local T1I3 = TweenInfo.new(2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out,0,false,0)
+
+local T2I = TweenInfo.new(Jt,Enum.EasingStyle.Quad,Enum.EasingDirection.In,0,false,0)
+local t2 = TS:Create(script.Parent.Attachment.LinearVelocity,T2I,{VectorVelocity = Vector3.new(0,0,-30000)})
+t2:Play() --load velocity
+local EnableStreak = true
+t2.Completed:Connect(function()
+	EnableStreak = false
+end)
+
+Vel = script.Parent.CFrame.LookVector*script.Parent.AssemblyLinearVelocity.Magnitude
+
+local  StreakCoro = coroutine.create(function() -- white streaks
+	while EnableStreak do
+		--for t = 1,math.round(math.log10(script.Parent.AssemblyLinearVelocity.Magnitude))*10 do
+		wait()
+		local NP = Instance.new("Part")
+		NP.Size = Vector3.new(10,10,script.Parent.AssemblyLinearVelocity.Magnitude/2)
+		NP.CFrame = script.Parent.CFrame*CFrame.fromEulerAnglesXYZ(0,0,math.rad(math.random()*360))
+		NP.Position = NP.Position+NP.CFrame.UpVector*2000+Vel*10--script.Parent.AssemblyLinearVelocity --script.Parent.CFrame.LookVector*script.Parent.AssemblyLinearVelocity.Magnitude
+		NP.Anchored = true
+		NP.Transparency = 1
+		NP.Parent = script.cache
+		NP.Material = Enum.Material.Neon
+		local t13 = TS:Create(NP,T1I2,{Transparency = 0})
+		t13:Play()
+		DS:AddItem(NP,5)
+		--end
+
+		--nozzle
+		script.Parent.warpdrive.nozzle.Attachment.CFrame = script.Parent.warpdrive.nozzle.Attachment.CFrame*CFrame.fromEulerAnglesXYZ(0,0,0.1)
+	end
+end)
+
+coroutine.resume(StreakCoro)
+while EnableStreak == true do
+	wait(1/math.clamp(math.log10(script.Parent.AssemblyLinearVelocity.Magnitude),1,math.huge))--faster rings
+
+	local R1 = script.Parent.Ring:Clone()
+	R1.Anchored = true
+	R1.CanCollide = false
+	R1.Transparency = 1
+	R1.Parent = script.cache
+	R1.Size = Vector3.new(radius,radius*0.075,radius)
+	R1.Position = script.Parent.Position+Vel.Unit*math.clamp(script.Parent.AssemblyLinearVelocity.Magnitude-1000,0,100000)
+	local t1 = TS:Create(R1,T1I2,{Size = Vector3.new(radius*0.95,radius*0.07,radius*0.95),Transparency = 0})
+	local t12 = TS:Create(R1,T1I,{Size = Vector3.new(radius*0.25,radius*0.025,radius*0.25),Position = script.Parent.Position-script.Parent.CFrame.LookVector*2000,Transparency = 1})
+	t1:Play()
+	t1.Completed:Connect(function()
+		t12:Play()
+		t12.Completed:Connect(function()
+			R1:Destroy()
+		end)
+	end)
+
+	if script.Parent.Position.Y<workspace.FallenPartsDestroyHeight+2000 then--abort
+		--nozzle fun
+		script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter1.Enabled = false
+		script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter2.Enabled = false
+		script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter3.Enabled = false
+		script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter4.Enabled = false
+		script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter5.Enabled = false
+
+		script.Parent.Attachment.AlignOrientation.Enabled = false
+		script.Parent.Attachment.LinearVelocity.Enabled = false
+		EnableStreak = false
+		wait()
+		script.cache:ClearAllChildren()
+		script.Parent.Kill.Event:Fire()
+		script.Enabled = false
+	end
+
+end
+wait()
+script.Parent.Attachment.LinearVelocity.VectorVelocity = Vector3.new(0,0,-150)
+wait(0.5)
+--script.Parent.Anchored = true
+--local T3I = TweenInfo.new(Size1.Z/10,Enum.EasingStyle.Linear,Enum.EasingDirection.In,0,false,0)
+--local T3 = TS:Create(script.Parent,T3I,{Position = script.Parent.Position+script.Parent.CFrame.LookVector*Size1.Z*2})
+--T3:Play()
+--script.cache:ClearAllChildren()
+
+--final portal break
+local PortalPos = script.Parent.Position+script.Parent.CFrame.LookVector*(Size1.Z/2+200)--buffers
+for i = 1,math.round(Size1.Z+100),20 do
+	wait(0.2)
+	local R1 = script.Parent.Ring:Clone()
+	R1.Anchored = true
+	R1.CanCollide = false
+	R1.Transparency = 1
+	R1.Parent = script.cache
+	R1.Size = Vector3.new(0,0,0)
+	R1.Position = PortalPos
+	local t13 = TS:Create(R1,T1I3,{Size = Vector3.new(radius*4,radius*0.25,radius*4),Transparency = 0,Color = Color3.fromRGB(255,255,128)})
+	local t14 = TS:Create(R1,T1I3,{Transparency = 1})
+	t13:Play()
+	t13.Completed:Connect(function()
+		t14:Play()
+		t14.Completed:Connect(function()
+			R1:Destroy()
+		end)
+	end)
+end
+
+--load
+local OPR = OverlapParams.new()
+OPR.RespectCanCollide = false
+OPR.FilterType = Enum.RaycastFilterType.Blacklist
+OPR.FilterDescendantsInstances = {}
+local AffectedParts = workspace:GetPartBoundsInRadius(script.Parent.Position,Size1.Magnitude*100,OPR)
+script.Parent.Attachment.LinearVelocity.VectorVelocity = Vector3.new(0,0,-30000)
+--nozzle fun
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter1.Enabled = false
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter2.Enabled = false
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter3.Enabled = false
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter4.Enabled = false
+script.Parent.warpdrive.nozzle.Attachment.ParticleEmitter5.Enabled = false
+--
+local NP = script.Parent.Parent.Parent
+local SeatLiat={}
+for ind,itm in ipairs(NP:GetDescendants()) do
+	if itm:IsA("Seat") or itm:IsA("VehicleSeat") then
+		table.insert(SeatLiat,itm)
+	end
+end
+while true do
+	local Sorted = -1
+	local Temp
+	for ind,itm in ipairs(SeatLiat) do
+		if SeatLiat[ind+1]~=nil then
+			local itm2 = SeatLiat[ind+1]
+			local P1 = NP.PrimaryPart.CFrame:PointToObjectSpace(itm2.Position)
+			local P2 = NP.PrimaryPart.CFrame:PointToObjectSpace(itm.Position)
+			--print(P1,P2)
+			local function swap()
+				Sorted = ind
+				Temp = itm2
+				SeatLiat[ind+1] = itm
+				SeatLiat[ind] = Temp
+			end
+			if P1.Z < P2.Z then
+				swap()
+			elseif P1.X < P2.X and P1.Z < P2.Z then
+				swap()
+			elseif P1.Y < P2.Y and P1.X < P2.X and P1.Z < P2.Z  then
+				swap()
+			end
+		end
+	end
+	if Sorted == -1 then
+		break
+	end
+	print(Sorted)
+	wait()
+end
+--
+local TpdPlrs = {}
+for ind,itm in AffectedParts do
+	if itm.Name == "HumanoidRootPart" then
+		table.insert(TpdPlrs,Plrs:GetPlayerFromCharacter(itm.Parent))
+	end
+end
+local TS2 = game:GetService("TeleportService")
+local TPO = Instance.new("TeleportOptions")
+--TPO:SetTeleportData({TpId,script.Parent.Parent}) serialization needed
+
+local SeatList = {}
+for ind2,itm2 in ipairs(SeatLiat) do
+	print(itm2.Occupant)
+	if itm2.Occupant then
+		local plr = Plrs:GetPlayerFromCharacter(itm2.Occupant.Parent)
+		if plr then
+			print(plr)
+			SeatList[tostring(plr.UserId)] = ind2
+		end
+	end
+end
+local TpdPlrsStr = {}
+for ind,itm in ipairs(TpdPlrs) do
+	table.insert(TpdPlrsStr,tostring(itm.UserId))
+end
+--for ind,itm in ipairs(TpdPlrs) do
+
+
+	--TS2:TeleportAsync()
+	--TS2:TeleportPartyAsync(TPGame,TpdPlrs,{script.Parent.Parent,TpId})
+	--if not S then
+	--	print(M)
+	--end
+--end
+
+wait(1)
+--for ind,itm in ipairs(TpdPlrs) do
+	local S,M = pcall(function()
+		--for ind2,itm2 in ipairs(SeatLiat) do
+		--print(itm2.Occupant)
+		--if itm2.Occupant == itm.Character:FindFirstChildWhichIsA("Humanoid") then
+		--TPO:SetTeleportData({TpId,"SolarPlane",3,ind2,Vector3.new(),TpdPlrs,nil})
+		TPO:SetTeleportData({TpId,"SolarPlane",3,SeatList,Vector3.new(0,0,0),TpdPlrs,nil})
+		local Result = TS2:TeleportAsync(TPGame,TpdPlrs,TPO)
+		--print(Result.PrivateServerId,Result.ReservedServerAccessCode)
+		--end
+		--end
+
+		--TS2:TeleportAsync()
+		--TS2:TeleportPartyAsync(TPGame,TpdPlrs,{script.Parent.Parent,TpId})
+	end)
+	--if not S then
+	--	print(M)
+	--end
+--end
+
+wait(0.1)
+--for ind,itm in ipairs(script.Parent.Parent:GetDescendants()) do
+--	if itm:IsA("BasePart") then
+--		itm.Transparency = 1
+--	end
+--end
