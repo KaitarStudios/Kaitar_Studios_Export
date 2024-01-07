@@ -263,7 +263,7 @@ plrs.PlayerAdded:Connect(function(plr)
 				end
 			end
 			if Found == false then
-				local Plane = game:GetService("ServerStorage").PlaneSpawn:FindFirstChild(Plane) --plane name
+				local Plane = game:GetService("ServerStorage").PlaneSpawn:FindFirstChild(Plane)
 				local NP = Plane:Clone()
 				NP.Parent = game:GetService("ServerStorage").PlaneSpawn.Cache
 				newQueue(NP,ID)
@@ -272,7 +272,7 @@ plrs.PlayerAdded:Connect(function(plr)
 			else
 				AddPlr(plr)
 			end
-		elseif TPdata[3] == 3 then--third version
+		elseif TPdata[3] == 3 then
 			ver3(TPdata,plr)
 		else
 			warn("You are using an incorrect version or syntax")
