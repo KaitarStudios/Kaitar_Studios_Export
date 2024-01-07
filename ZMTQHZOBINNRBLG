@@ -1,4 +1,4 @@
-
+print(test)
 --local m = game:GetService("UserInputService")
 --local n = game:GetService("TouchInputService")
 --local s = script.Parent.core.Throttle.core.Slider
