@@ -3,40 +3,7 @@ local SelectTexture = Enum.Material.Neon
 local SpawnPos = Vector3.new(0,30000,0)
 
 local plrs = game:GetService("Players")
---[[
---local SS = game:GetService("ServerStorage")
---local NFolder = Instance.new("Folder")
---NFolder.Parent = SS
---NFolder.Name = "LoadingPlanes"
 
-
---local RS = game:GetService("ReplicatedStorage")
---local NRFolder = Instance.new("Folder")
---NRFolder.Parent = RS
---NRFolder.Name = "PlaneSlot"
-
---local SelectedQueue = nil
---script.Parent.eventlist.SelectEvent.Event:Connect(function(part,plrID)
---	--print("Triggered")
---	--for ind,itm in ipairs(script.Parent.Queues:GetDescendants()) do
---	--	if itm.Name == "TogglePart" then
---	--		part.Material = DefaultTexture
---	--	end
---	--end
---	if SelectedQueue then
---		SelectedQueue:FindFirstChild("Button").Material = DefaultTexture
---	end
---	part.Material = SelectTexture
---	SelectedQueue = part.Parent
---end)
-
---if game:GetService("StarterPlayer").StarterPlayerScripts:FindFirstChild("TPloader") then
---else
---	warn("TPloader Not in position")
---end
---script:FindFirstChildWhichIsA("SurfaceGui")
---script.Parent.eventlist.AddEvent.Event:Connect(function(plrID)
-]]--
 function AddPlr(plr)
 	if SelectedQueue then
 		local NP = Instance.new("Part")
@@ -55,11 +22,6 @@ function AddPlr(plr)
 		NQB.TextScaled = true
 		NQB.BackgroundTransparency = 1
 		NQB.Size = UDim2.new(1,0,1,0)
-		--[[
-		--local NA1 = Instance.new("Attachment")
-		--NA1.Parent = NP
-		--NA1.Position = Vector3.new(2, 0, 0)
-		]]--
 		local NA2 = Instance.new("Attachment")
 		NA2.Parent = NP
 		NA2.Position = Vector3.new(0, 1, 0)
@@ -68,49 +30,9 @@ function AddPlr(plr)
 		PC.Parent = NA2
 		PC.Attachment0 = SelectedQueue:FindFirstChild("UpAtt")
 		PC.Attachment1 = NA2
-		--[[
-		--if SelectedQueue:FindFirstChild("Commander") or  SelectedQueue:FindFirstChild("Pilot") then
-		--	local Plrs = SelectedQueue:GetChildren() 
-		--	table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChildWhichIsA("SurfaceGui"))) -- gets all and removes Commander and Pilot
-		--	if table.find(Plrs,SelectedQueue:FindFirstChild("Commander")) then
-		--		table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChild("Commander")))
-		--	end
-		--	if table.find(Plrs,SelectedQueue:FindFirstChild("Pilot")) then
-		--		table.remove(Plrs,table.find(Plrs,SelectedQueue:FindFirstChild("Pilot")))
-		--	end
-
-		--else
-		--	local NP = SelectedQueue:Clone() -- set commander
-		--	NP.Parent = SelectedQueue
-		--	NP.CFrame = SelectedQueue.CFrame+SelectedQueue.CFrame.UpVector*2
-		--	NP.Name = "Commander"
-		--	NP:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text = plr.UserId
-		--end		
-		]]--
 	end
 end
---[[
---script.Parent.AddButton.ClickDetector.MouseClick:Connect(AddPlr)
 
---script.Parent.Removebutton.ClickDetector.MouseClick:Connect(function(plr)
---	if SelectedQueue then
---		for ind,itm in SelectedQueue:GetChildren() do  -- finds player block and removes it
---			if itm:FindFirstChildWhichIsA("SurfaceGui") then
---				if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel") then
---					--print(itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text)
---					if itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == tostring(plr.UserId) then
---						itm:Destroy()
---					end
---				end
---			end
---		end
---		if #SelectedQueue:GetChildren() <= 6 then
---			SelectedQueue:Destroy()
---			SelectedQueue = nil
---		end
---	end
---end)
-]]--
 function GetPlrList()
 	local List1 = {}
 	local List2 = {}
@@ -133,16 +55,10 @@ function GetPlrList()
 	for ind,itm in ipairs(List2) do
 		table.insert(List3,game:GetService("Players"):GetPlayerByUserId(tostring(itm:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text)))
 	end
-	--[[
-	--for ind,itm in ipairs(List3) do
-	--	print(itm)
-	--end
-	]]--
+	
 	return List3
 end
---[[
---game:GetService("Players"):GetPlayerByUserId()
-]]--
+
 
 
 function newQueue(PlaneModel,ID)
@@ -151,18 +67,7 @@ function newQueue(PlaneModel,ID)
 	NQ.Parent = script.Parent.Queues
 	NQ.CFrame = script.Parent.CFrame + script.Parent.CFrame.RightVector*-4*#script.Parent.Queues:GetChildren()+script.Parent.CFrame.UpVector*-2
 	NQ.Material = DefaultTexture
-	--[[
-	--local NG = Instance.new("SurfaceGui")
-	--NG.Parent = NQ
-	--NG.Face = Enum.NormalId.Front
-	--NG.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
-	--local NQB = Instance.new("TextLabel")
-	--NQB.Parent = NG
-	--NQB.Text = tostring(math.round(math.random()*math.random()*100000))
-	--NQB.TextScaled = true
-	--NQB.BackgroundTransparency = 1
-	--NQB.Size = UDim2.new(1,0,1,0)
-	]]--
+	
 	for ind,itm in ipairs(script.Parent.Storage.QueueStart:GetChildren()) do
 		itm:Clone().Parent = NQ
 	end
@@ -180,18 +85,7 @@ function newQueue(PlaneModel,ID)
 	NB.Name = "Button"
 	NB.Size = Vector3.new(4, 2, 2)
 	NB.CFrame = NQ.CFrame + NQ.CFrame.UpVector*-2
-	--[[
-	--local NBG = Instance.new("SurfaceGui")
-	--NBG.Parent = NB
-	--NBG.Face = Enum.NormalId.Front
-	--NBG.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
-	--local NBB = Instance.new("TextLabel")
-	--NBB.Parent = NBG
-	--NBB.Text = "Toggle"
-	--NBB.TextScaled = true
-	--NBB.BackgroundTransparency = 1
-	--NBB.Size = UDim2.new(1,0,1,0)
-	]]--
+	
 	for ind,itm in ipairs(script.Parent.Storage.ButtonStart:GetChildren()) do
 		itm:Clone().Parent = NB
 	end
@@ -209,84 +103,29 @@ function newQueue(PlaneModel,ID)
 	NMR.Value = PlaneModel
 end
 
-
---[[
---script.Parent.NewQueue.ClickDetector.MouseClick:Connect(function()
---	newQueue(game:GetService("ServerStorage").PlaneSpawn.KoiFar:Clone(),nil)
---end)
-
---script.Parent.LoadPlrs.ClickDetector.MouseClick:Connect(function()
---	if SelectedQueue then
---		print(SelectedQueue)
---		if SelectedQueue:FindFirstChildWhichIsA("ObjectValue") then
---			print(SelectedQueue:FindFirstChildWhichIsA("ObjectValue"))
---			if SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value then
---				print(SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value)
---				local plane = SelectedQueue:FindFirstChildWhichIsA("ObjectValue").Value
---				plane.Parent = workspace
---				plane:SetPrimaryPartCFrame(CFrame.new(SpawnPos))
---				local plrs = GetPlrList()
---				wait(2)
---				for ind,itm in ipairs(plane:GetDescendants()) do
---					if itm.Name == "PilotSeat" then
---						if itm.Disabled == false then
---							itm:Sit(plrs[1].Character.Humanoid)
---							table.remove(plrs,1)
---						end
---					end
---				end
---				for ind,itm in ipairs(plane:GetDescendants()) do
---					if itm:IsA("VehicleSeat") then
---						if itm.Disabled == false then
---							itm:Sit(plrs[1].Character.Humanoid)
---							table.remove(plrs,1)
---						end
---					end
---				end
---				for ind,itm in ipairs(plane:GetDescendants()) do
---					if itm:IsA("Seat") then
---						if itm.Disabled == false then
---							itm:Sit(plrs[1].Character.Humanoid)
---							table.remove(plrs,1)
---						end
---					end
---				end
---			end
---		end
---	end
---end)
-]]--
-
-
 local log = {}
 local WaitingQueues = {}
 local SS = game:GetService("ServerStorage")
 function ver3(TPdata,plr1)
-	--[[
-	--local spawned = 
-	--TPO:SetTeleportData({TpId,"KoiFar",TPversion,seatNo,ChrRelPos,TpdPlrs,Heiarchy})
-	--TPO:SetTeleportData({TpId,"KoiFar",TPversion,seatNo,ChrRelPos,TpdPlrs,Heiarchy,ArrivalDirection})
-	]]--
+
 	local TpId = TPdata[1]
 	local TpdPlrs = TPdata[6]
 	local PlaneName = TPdata[2]
 	for ind,itm in pairs(TPdata[4]) do
 		print(ind,itm)
 	end
-	if SS:FindFirstChild("PlaneSpawn") ~= nil then --Abort when plane is not
+	if SS:FindFirstChild("PlaneSpawn") ~= nil then
 		if SS.PlaneSpawn:FindFirstChild(PlaneName) ~= nil then
 		else
 			warn(PlaneName,"not found")
-			--insert error message
 			return
 		end
 	else
 		warn("Folder not found")
-		--insert error message
 		return
 	end
 
-	if WaitingQueues[tostring(TpId)] ~= nil then--found queue
+	if WaitingQueues[tostring(TpId)] ~= nil then
 		table.insert(WaitingQueues[tostring(TpId)]["JoinedPlrs"],plr1)
 		WaitingQueues[tostring(TpId)]["PlrData"][tostring(plr1.UserId)] = {TPdata[4][tostring(plr1.UserId)],TPdata[5],TPdata[6]}
 		local ClnPlrList = WaitingQueues[tostring(TpId)]["PlrLst"]
@@ -397,7 +236,6 @@ if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil then
 				while math.random() > 0.5 do
 					NP.Name = NP.Name..string.char(math.random(32,126))
 				end
-				--NP:SetNetworkOwner(game:GetService("Players").LocalPlayer)
 			end
 			wait()
 		end
