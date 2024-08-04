@@ -32,7 +32,7 @@ end
 TogPlm(script.Parent.Parent.S1.Model1.eModel,True)
 wait(5)
 script.Parent.S0:Destroy()
-print("KTS was here")
+coroutine.resume(cort)
 NT.Force = Vector3.new(0, 0, -20000000)
 wait(80)
 TogPlm(script.Parent.Parent.S1.Model1.eModel,False)
