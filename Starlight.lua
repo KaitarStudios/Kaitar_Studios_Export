@@ -4,6 +4,7 @@ local NT = Instance.new("BodyThrust")
 NG.Parent = script.Parent
 NT.Parent = script.Parent
 NG.CFrame = script.Parent.CFrame
+NG.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
 NT.Force = Vector3.new()
 
 local TgtHeight = 1000000
@@ -33,7 +34,6 @@ TogPlm(script.Parent.Parent.S1.Model1.eModel,True)
 wait(5)
 script.Parent.S0:Destroy()
 coroutine.resume(cort)
-NG.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
 NT.Force = Vector3.new(0, 0, -20000000)
 wait(80)
 TogPlm(script.Parent.Parent.S1.Model1.eModel,False)
