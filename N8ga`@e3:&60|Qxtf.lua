@@ -20,6 +20,7 @@ local cort = coroutine.create(function()
     NV.Velocity = Vector3.new(0,0,0)
 end)
 
+
 function TogPlm(model,bool)
 	for i,v in ipairs(model:GetDescendants()) do
 		if v:IsA("ParticleEmitter") then
