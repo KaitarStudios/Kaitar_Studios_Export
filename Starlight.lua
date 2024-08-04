@@ -15,7 +15,7 @@ local cort = coroutine.create(function()
 	while alt < MaxHeight or alt < 10000 do
 		alt = script.Parent.Position.Y
 		MaxHeight = alt
-        	NG.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
+        	NG.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/4+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
 		wait(0.1)
 	end
 	if script.Parent.Parent.S3 then
