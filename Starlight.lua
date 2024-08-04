@@ -10,7 +10,8 @@ local TgtHeight = 1000000
 local MaxHeight = -10000
 
 local cort = coroutine.create(function() 
-    while script.Parent.Position < MaxHeight or script.Parent.Position < 10000 do
+    while script.Parent.Position.Y < MaxHeight or script.Parent.Position.Y < 10000 do
+	MaxHeight = script.Parent.Position.Y
         NG.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
     end
     local NV = Instance.new("BodyVelocity")
