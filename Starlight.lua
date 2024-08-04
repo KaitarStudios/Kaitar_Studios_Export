@@ -27,6 +27,15 @@ function TogPlm(model,bool)
 		if v:IsA("ParticleEmitter") then
 			v.Enabled = bool
 		end
+		if v:IsA("Part") then
+			if v.Material == Enum.Material.Neon then
+				if bool then
+					v.Transparency = 0
+				else
+					v.Transparency = 1
+				end
+			end
+		end
 	end
 end
 
