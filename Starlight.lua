@@ -4,7 +4,7 @@ local NT = Instance.new("BodyThrust")
 NG.Parent = script.Parent
 NT.Parent = script.Parent
 NG.CFrame = script.Parent.CFrame
-NT.VectorForce = Vector3.new()
+NT.Force = Vector3.new()
 
 local TgtHeight = 1000000
 local MaxHeight = -10000
