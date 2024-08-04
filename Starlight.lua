@@ -16,7 +16,9 @@ local cort = coroutine.create(function()
         	NG.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
 		wait(0.1)
 	end
-	script.Parent.S3:Destroy()
+	if script.Parent.Parent.S3 then
+		script.Parent.S3:Destroy()
+	end
 	local NV = Instance.new("BodyVelocity")
 	NV.Parent = script.Parent
 	NV.MaxForce = Vector3.new(0, 3099999993722699776, 0)
