@@ -11,8 +11,10 @@ local orbit_alt = 400000
 local MaxHeight = -10000
 
 local cort = coroutine.create(function() 
-	while script.Parent.Position.Y < MaxHeight or script.Parent.Position.Y < 10000 do
-		MaxHeight = script.Parent.Position.Y
+	local alt = script.Parent.Position.Y
+	while alt < MaxHeight or alt < 10000 do
+		alt = script.Parent.Position.Y
+		MaxHeight = alt
         	NG.CFrame = CFrame.fromEulerAnglesXYZ(0,0,math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)))
 		wait(0.1)
 	end
