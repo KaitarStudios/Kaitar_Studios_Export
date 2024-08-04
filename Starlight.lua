@@ -5,7 +5,6 @@ NG.Parent = script.Parent
 NT.Parent = script.Parent
 NG.CFrame = script.Parent.CFrame
 NT.Force = Vector3.new()
-print("KTS was here")
 
 local TgtHeight = 1000000
 local MaxHeight = -10000
@@ -33,6 +32,7 @@ end
 TogPlm(script.Parent.Parent.S1.Model1.eModel,True)
 wait(5)
 script.Parent.S0:Destroy()
+print("KTS was here")
 NT.Force = Vector3.new(0, 0, -20000000)
 wait(80)
 TogPlm(script.Parent.Parent.S1.Model1.eModel,False)
