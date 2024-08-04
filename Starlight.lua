@@ -39,6 +39,9 @@ function TogPlm(model,bool)
 	end
 end
 
+TogPlm(script.Parent.Parent.S1.Model1.eModel,false)
+TogPlm(script.Parent.Parent.S2,false)
+
 TogPlm(script.Parent.Parent.S1.Model1.eModel,true)
 wait(5)
 script.Parent.S0:Destroy()
