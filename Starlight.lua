@@ -17,7 +17,7 @@ local cort = coroutine.create(function()
 		MaxHeight = math.max(alt,MaxHeight)
   NG.CFrame = CFrame.fromEulerAnglesXYZ(math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)),0,0)
 		wait(0.1)
-		print(MaxHeight,"|",alt)	
+		--print(MaxHeight,"|",alt)	
 	end
 	if script.Parent.Parent.S3 then
 		script.Parent.S3:Destroy()
@@ -26,7 +26,7 @@ local cort = coroutine.create(function()
 	NV.Parent = script.Parent
 	NV.MaxForce = Vector3.new(0, 3099999993722699776, 0)
 	NV.Velocity = Vector3.new(0,0,0)
-	print("Gyro Finished")
+	--print("Gyro Finished")
 end)
 
 function TogPlm(model,bool)
@@ -34,7 +34,7 @@ function TogPlm(model,bool)
 		if v:IsA("ParticleEmitter") then
 			v.Enabled = bool
 		end
-		if v:IsA("Part") then
+		if v:IsA("BasePart") then
 			if v.Material == Enum.Material.Neon then
 				if bool then
 					v.Transparency = 0
