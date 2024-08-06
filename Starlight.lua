@@ -12,7 +12,7 @@ local MaxHeight = -10000
 
 local cort = coroutine.create(function() 
 	local alt = script.Parent.Position.Y
-	while alt > MaxHeight-100 or alt < 10000 do
+	while alt > MaxHeight or alt < 10000 do
 		alt = script.Parent.Position.Y
 		MaxHeight = alt
 		print(MaxHeight)
