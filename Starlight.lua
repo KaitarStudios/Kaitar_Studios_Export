@@ -12,9 +12,9 @@ local MaxHeight = -10000
 
 local cort = coroutine.create(function() 
 	local alt = script.Parent.Position.Y
+	print(MaxHeight,"|",alt)	
 	while alt > MaxHeight or alt < 10000 do
 		alt = script.Parent.Position.Y
-		print(MaxHeight,"|",alt)	
 		MaxHeight = alt
   NG.CFrame = CFrame.fromEulerAnglesXYZ(math.pi/2+(((math.pi)*math.clamp(alt,-1000,orbit_alt))/(2*orbit_alt)),0,0)
 		wait(0.1)
