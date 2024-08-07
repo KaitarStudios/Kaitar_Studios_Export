@@ -46,7 +46,7 @@ function TogPlm(model,bool)
 	end
 end
 
-if script.Parent.Parent.S1 then
+if script.Parent.Parent:FindFirstChild("S1") then
 	TogPlm(script.Parent.Parent.S1.Model1.eModel,true)
 	wait(5)
 	script.Parent.S0:Destroy()
