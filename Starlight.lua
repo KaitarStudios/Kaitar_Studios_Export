@@ -19,7 +19,7 @@ local cort = coroutine.create(function()
 		wait(0.1)
 		--print(MaxHeight,"|",alt)	
 	end
-	if script.Parent.Parent.S3 then
+	if script.Parent.Parent:FindFirstChild("S3") then
 		script.Parent.S3:Destroy()
 	end
 	local NV = Instance.new("BodyVelocity")
@@ -58,7 +58,7 @@ if script.Parent.Parent:FindFirstChild("S1") then
 	script.Parent.S1:Destroy()
 	wait(1)
 end
-if script.Parent.Parent.S2 then
+if script.Parent.Parent:FindFirstChild("S2") then
 	TogPlm(script.Parent.Parent.S2,true)
 	wait(120)
 	NT.Force = Vector3.new(0, 0, 0)
