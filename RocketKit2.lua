@@ -1,8 +1,10 @@
 
 local EnabledEngines = {}
 local StageList = {}
+print("RD-1.01")
 --------------------------------------------
-function WeldModel(model)	
+function WeldModel(model)
+	print("Welded "..model.Name)
 	local Firstpart = nil
 	local Largepart = nil
 	local welds = {}
@@ -257,9 +259,9 @@ local stepping = coroutine.create(function()
 			local Impulse = EngineTable[6]
 			local RP1 = RequestFuel(EngineTable[2],EngineTable[3]*Dt*Throttle)
 			local Ox = RequestFuel(EngineTable[4],EngineTable[5]*Dt*Throttle)
-			print(EngineTable)
-			print(RP1,Ox,Throttle,workspace.Gravity,Dt,Throttle)
-			print((RP1+Ox)*Throttle*workspace.Gravity)
+			--print(EngineTable)
+			--print(RP1,Ox,Throttle,workspace.Gravity,Dt,Throttle)
+			--print((RP1+Ox)*Throttle*workspace.Gravity)
 			if RP1 and Ox then
 				if math.min(RP1,Ox) ~= 0 then
 					EngineTable[1].VectorForce.Force = Vector3.new((RP1+Ox)*Throttle*Impulse*workspace.Gravity*Clockrate,0,0)
