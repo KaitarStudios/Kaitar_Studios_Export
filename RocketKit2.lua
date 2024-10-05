@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.01-4")
+print("RD-1.01-5")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -214,6 +214,7 @@ end
 print(Rocket)
 for i,Bloc in ipairs(Rocket) do
 	WeldModel(Bloc) -- rocket weld
+end
 
 for i,group in ipairs(script.Parent.Staging:GetChildren()) do
 	local num = tonumber(string.split(group.Name," ")[2]) -- sort stages
