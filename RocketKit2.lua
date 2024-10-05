@@ -207,7 +207,7 @@ end]]
 
 local Rocket = script.Parent:FindFirstChild("MasterFolder")
 if Rocket then
-	Rocket = Rocket:GetChildren()
+	Rocket = Rocket.Value:GetChildren()
 else
 	Rocket = script.Parent.Parent.Parent:GetChildren()
 end
