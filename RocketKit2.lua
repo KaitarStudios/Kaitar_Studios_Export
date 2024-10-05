@@ -198,9 +198,16 @@ for i,Trigger in ipairs(script.Parent.Staging:GetDescendants()) do
 	end
 end
 
-local Rocket = script.Parent.Parent.Parent:GetChildren()
+--[[local Rocket = script.Parent.Parent.Parent:GetChildren()
 for i,Bloc in ipairs(Rocket) do
 	WeldModel(Bloc) -- rocket weld
+end]]
+
+local Rocket = script.Parent:FindFirstChild("MasterFolder")
+if Rocket then
+	Rocket = Rocket:GetChildren()
+else
+	Rocket = script.Parent.Parent.Parent:GetChildren()
 end
 
 for i,group in ipairs(script.Parent.Staging:GetChildren()) do
