@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.01")
+print("RD-1.01-2")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -128,7 +128,7 @@ local TestEtable = {
 }]]
 -----------------------------------------------------
 function RequestFuel(fuelmangager,mass)
-	print(fuelmangager,mass)
+	--print(fuelmangager,mass)
 	if not fuelmangager then
 		return false
 	end
@@ -211,6 +211,7 @@ if Rocket then
 else
 	Rocket = script.Parent.Parent.Parent:GetChildren()
 end
+print(Rocket)
 
 for i,group in ipairs(script.Parent.Staging:GetChildren()) do
 	local num = tonumber(string.split(group.Name," ")[2]) -- sort stages
