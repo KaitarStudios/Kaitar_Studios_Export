@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.01-7")
+print("RD-1.01-8")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -253,7 +253,8 @@ local stepping = coroutine.create(function()
 		CurrentPos = script.Parent.Position
 		local Dp = (CurrentPos - lastpos)/velocity
 		if Dp ~= Dp then
-		DP = Vector3.new(0.01,0.01,0.01)
+			DP = Vector3.new(0.01,0.01,0.01)
+		end
 		Dt =  (Dp.X+Dp.Y+Dp.Z)*0.33
 		if Dt ~= Dt or Dt > 1/Clockrate then
 			Dt = 1/Clockrate
