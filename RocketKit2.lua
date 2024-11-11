@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.01-8")
+print("RD-1.01-9")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -68,6 +68,9 @@ function TogPlm(model,bool)
 	for i,v in ipairs(model:GetDescendants()) do
 		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
 			v.Enabled = bool
+		end
+		if v:IsA("Sound") then
+			v.Playing = bool
 		end
 		if v:IsA("BasePart") or v:IsA("MeshPart") then
 			if v.Material == Enum.Material.Neon then
