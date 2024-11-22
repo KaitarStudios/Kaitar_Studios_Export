@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.01-9")
+print("RD-1.02-0")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -231,7 +231,7 @@ end
 --table.remove(StageList,1)
 --print(StageList)
 ------------------------------------------------------
-local orbit_alt = script.Parent.OrbitAlt.Value
+--[[local orbit_alt = script.Parent.OrbitAlt.Value
 local MaxHeight = -10000
 
 local TS = game:GetService("TweenService")
@@ -242,7 +242,7 @@ NG.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 3999999937226
 
 local orbit_alt = 400000
 local MaxHeight = -10000
-local Guidance = true
+local Guidance = true]]
 local Clockrate = script.Parent.ClockRate.Value
 
 local stepping = coroutine.create(function()
@@ -301,7 +301,7 @@ local stepping = coroutine.create(function()
 			end
 		end
 		-------------------------------------------------
-		local alt = CurrentPos.Y
+		--[[local alt = CurrentPos.Y
 		if (alt - MaxHeight > -5 or alt < 10000) and Guidance then
 			alt = script.Parent.Position.Y
 			MaxHeight = math.max(alt,MaxHeight)
@@ -314,7 +314,7 @@ local stepping = coroutine.create(function()
 			NV.MaxForce = Vector3.new(0, 3099999993722699776, 0)
 			NV.Velocity = Vector3.new(0,0,0)
 			Guidance = false
-		end
+		end]]
 	end
 end)
 coroutine.resume(stepping)
@@ -330,14 +330,22 @@ script.Parent.Activate.Event:Connect(function()
 	end
 	table.remove(StageList,1)
 end)
-
-script.Parent.RemoteEvent.OnServerEvent:Connect(function()
+local RemoteChannel = nil
+script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
+	RemoteChannel = remote
+end)
+RemoteChannel.OnServerEvent:Connect(function(player,passedvalues)
 	print("Git")
-	if #StageList == 0 then
-		return
+	if passedvalues["Staging"] then
+		if #StageList == 0 then
+			return
+		end
+		for i,obj in ipairs(StageList[1]:GetChildren()) do
+			UseTrigger(obj.Value)
+		end
+		table.remove(StageList,1)
 	end
-	for i,obj in ipairs(StageList[1]:GetChildren()) do
-		UseTrigger(obj.Value)
+	if passedvalues["Orientation"] then
+		
 	end
-	table.remove(StageList,1)
 end)
