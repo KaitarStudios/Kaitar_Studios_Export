@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.02-0")
+print("RD-1.02-1")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -330,22 +330,27 @@ script.Parent.Activate.Event:Connect(function()
 	end
 	table.remove(StageList,1)
 end)
-local RemoteChannel = nil
+local connectcount = 0
 script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
-	RemoteChannel = remote
-end)
-RemoteChannel.OnServerEvent:Connect(function(player,passedvalues)
-	print("Git")
-	if passedvalues["Staging"] then
-		if #StageList == 0 then
+	connectcount = connectcount+1
+	local currentcount = connectcount
+	remote.OnServerEvent:Connect(function(player,passedvalues)
+		print("Git")
+		if connectcount ~= currentcount then
 			return
 		end
-		for i,obj in ipairs(StageList[1]:GetChildren()) do
-			UseTrigger(obj.Value)
+		if passedvalues["Staging"] then
+			if #StageList == 0 then
+				return
+			end
+			for i,obj in ipairs(StageList[1]:GetChildren()) do
+				UseTrigger(obj.Value)
+			end
+			table.remove(StageList,1)
 		end
-		table.remove(StageList,1)
-	end
-	if passedvalues["Orientation"] then
-		
-	end
+		if passedvalues["Orientation"] then
+			
+		end
+	end)
 end)
+
