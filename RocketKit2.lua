@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.02-4")
+print("RD-1.02-5")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -221,7 +221,7 @@ end
 
 for i,group in ipairs(script.Parent.Staging:GetChildren()) do
 	local num = tonumber(string.split(group.Name," ")[2]) -- sort stages
-	StageList[num] = group
+	StageList[num+1] = group
 end
 
 --for i,group in ipairs(StageList) do
@@ -253,6 +253,7 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 		if connectcount ~= currentcount then
 			return
 		end
+		print("Gitstage")
 		if passedvalues["Staging"] then
 			if #StageList == 0 then
 				return
