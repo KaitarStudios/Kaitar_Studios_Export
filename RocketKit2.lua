@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.02-1")
+print("RD-1.02-2")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -335,7 +335,7 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 	connectcount = connectcount+1
 	local currentcount = connectcount
 	remote.OnServerEvent:Connect(function(player,passedvalues)
-		print("Git")
+		print("Git",connectcount ~= currentcount)
 		if connectcount ~= currentcount then
 			return
 		end
