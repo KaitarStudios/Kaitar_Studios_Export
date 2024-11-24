@@ -335,7 +335,7 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 	connectcount = connectcount+1
 	local currentcount = connectcount
 	remote.OnServerEvent:Connect(function(player,passedvalues)
-		print("Git",connectcount,currentcount)
+		print("Git",connectcount,currentcount,passedvalues)
 		if connectcount ~= currentcount then
 			return
 		end
