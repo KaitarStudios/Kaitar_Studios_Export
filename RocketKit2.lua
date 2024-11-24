@@ -230,6 +230,52 @@ end
 --print(StageList)
 --table.remove(StageList,1)
 --print(StageList)
+-----------------------------------------------------
+local StageOnFlameOut = true
+
+script.Parent.Activate.Event:Connect(function()
+	if #StageList == 0 then
+		return
+	end
+	for i,obj in ipairs(StageList[1]:GetChildren()) do
+		UseTrigger(obj.Value)
+	end
+	table.remove(StageList,1)
+end)
+local connectcount = 0
+local ConnectedRemote
+script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
+	ConnectedRemote = remote
+	connectcount = connectcount+1
+	local currentcount = connectcount
+	remote.OnServerEvent:Connect(function(player,passedvalues)
+		print("Git",connectcount,currentcount,passedvalues)
+		if connectcount ~= currentcount then
+			return
+		end
+		if passedvalues["Staging"] then
+			if #StageList == 0 then
+				return
+			end
+			for i,obj in ipairs(StageList[1]:GetChildren()) do
+				UseTrigger(obj.Value)
+			end
+			table.remove(StageList,1)
+		end
+		if passedvalues["Orientation"] then
+			
+		end
+	end)
+end)
+
+local passedvalues = {}
+local function flameout(Enginedriver)
+	if ConnectedRemote then
+		passedvalues["Flameout"] = enginedriver
+		ConnectedRemote:FireAllClients(passedvalues)
+		passedvalues["Flameout"] = nil
+	end
+end
 ------------------------------------------------------
 --[[local orbit_alt = script.Parent.OrbitAlt.Value
 local MaxHeight = -10000
@@ -272,32 +318,33 @@ local stepping = coroutine.create(function()
 			--print(EngineTable)
 			--print(RP1,Ox,Throttle,workspace.Gravity,Dt,Throttle)
 			--print((RP1+Ox)*Throttle*workspace.Gravity)
+			local Flameout = false
 			if RP1 and Ox then
 				if math.min(RP1,Ox) ~= 0 then
 					EngineTable[1].VectorForce.Force = Vector3.new((RP1+Ox)*Throttle*Impulse*workspace.Gravity*Clockrate,0,0)
 				else
-					EngineTable[1].VectorForce.Enabled = false
-					table.remove(EnabledEngines,i)
-					StopEngine(EngineTable[1])
+					Flameout = true
 				end
 			elseif RP1 then
 				if RP1 ~= 0 then
 					EngineTable[1].VectorForce.Force = Vector3.new(RP1*Impulse*Throttle*workspace.Gravity*Clockrate,0,0)
 				else
-					EngineTable[1].VectorForce.Enabled = false
-					table.remove(EnabledEngines,i)
-					StopEngine(EngineTable[1])
+					Flameout = true
 				end
 			elseif Ox then
 				if Ox ~= 0 then
 					EngineTable[1].VectorForce.Force = Vector3.new(Ox*Impulse*Throttle*workspace.Gravity*Clockrate,0,0)
 				else
-					EngineTable[1].VectorForce.Enabled = false
-					table.remove(EnabledEngines,i)
-					StopEngine(EngineTable[1])
+					Flameout = True	
 				end
 			else
 				warn("Invalid Engine Configuration")
+			end
+			if Flameout then
+				EngineTable[1].VectorForce.Enabled = false
+				table.remove(EnabledEngines,i)
+				StopEngine(EngineTable[1])
+				flameout(EngineTable[1])
 			end
 		end
 		-------------------------------------------------
@@ -319,38 +366,5 @@ local stepping = coroutine.create(function()
 end)
 coroutine.resume(stepping)
 --------------------------------------------
-local StageOnFlameOut = true
 
-script.Parent.Activate.Event:Connect(function()
-	if #StageList == 0 then
-		return
-	end
-	for i,obj in ipairs(StageList[1]:GetChildren()) do
-		UseTrigger(obj.Value)
-	end
-	table.remove(StageList,1)
-end)
-local connectcount = 0
-script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
-	connectcount = connectcount+1
-	local currentcount = connectcount
-	remote.OnServerEvent:Connect(function(player,passedvalues)
-		print("Git",connectcount,currentcount,passedvalues)
-		if connectcount ~= currentcount then
-			return
-		end
-		if passedvalues["Staging"] then
-			if #StageList == 0 then
-				return
-			end
-			for i,obj in ipairs(StageList[1]:GetChildren()) do
-				UseTrigger(obj.Value)
-			end
-			table.remove(StageList,1)
-		end
-		if passedvalues["Orientation"] then
-			
-		end
-	end)
-end)
 
