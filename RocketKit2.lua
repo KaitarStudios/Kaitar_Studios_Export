@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.02-5")
+print("RD-1.02-6")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -272,7 +272,7 @@ end)
 local passedvalues = {}
 local function flameout(Enginedriver)
 	if ConnectedRemote then
-		passedvalues["Flameout"] = enginedriver
+		passedvalues["Flameout"] = Enginedriver
 		ConnectedRemote:FireAllClients(passedvalues)
 		passedvalues["Flameout"] = nil
 	end
@@ -303,7 +303,7 @@ local stepping = coroutine.create(function()
 		CurrentPos = script.Parent.Position
 		local Dp = (CurrentPos - lastpos)/velocity
 		if Dp ~= Dp then
-			DP = Vector3.new(0.01,0.01,0.01)
+			Dp = Vector3.new(0.01,0.01,0.01)
 		end
 		Dt =  (Dp.X+Dp.Y+Dp.Z)*0.33
 		if Dt ~= Dt or Dt > 1/Clockrate then
@@ -336,7 +336,7 @@ local stepping = coroutine.create(function()
 				if Ox ~= 0 then
 					EngineTable[1].VectorForce.Force = Vector3.new(Ox*Impulse*Throttle*workspace.Gravity*Clockrate,0,0)
 				else
-					Flameout = True	
+					Flameout = true	
 				end
 			else
 				warn("Invalid Engine Configuration")
@@ -367,5 +367,4 @@ local stepping = coroutine.create(function()
 end)
 coroutine.resume(stepping)
 --------------------------------------------
-
 
