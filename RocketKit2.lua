@@ -1,7 +1,7 @@
 
 local EnabledEngines = {}
 local StageList = {}
-print("RD-1.02-6")
+print("RD-2.0-1")
 --------------------------------------------
 function WeldModel(model)
 	print("Welded "..model.Name)
@@ -193,7 +193,7 @@ function SetTrigger(obj)
 		VF.Attachment0 = NA
 		VF.Enabled = false
 	else
-		
+
 	end
 end
 -----------------------------------------------------
@@ -230,8 +230,38 @@ end
 --print(StageList)
 --table.remove(StageList,1)
 --print(StageList)
+local NA = Instance.new("Attachment")
+NA.Parent = script.Parent
+local NG = Instance.new("AngularVelocity")
+NG.Parent = NA
+NG.RelativeTo = Enum.ActuatorRelativeTo.Attachment0
+NG.AngularVelocity = Vector3.new(0,0,0)
+NG.MaxTorque = 399999993722699776
+NG.Attachment0 = NA
+NG.Enabled = true
 -----------------------------------------------------
-local StageOnFlameOut = true
+--local StageOnFlameOut = true
+local TS = game:GetService("TweenService")
+local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
+local NT = TS:Create(NG,TO,{["AngularVelocity"]=Vector3.new(0,0,0)})
+local function functions(passedvalues)
+	if passedvalues["Staging"] then
+		print("Gitstage")
+		if #StageList == 0 then
+			return
+		end
+		for i,obj in ipairs(StageList[1]:GetChildren()) do
+			UseTrigger(obj.Value)
+		end
+		table.remove(StageList,1)
+	end
+	if passedvalues["Orientation"] then
+		print("GitRot")
+		NT:Cancel()
+		NT = TS:Create(NG,TO,{["AngularVelocity"]=passedvalues["Orientation"]})
+		NT:Play()
+	end
+end
 
 script.Parent.Activate.Event:Connect(function()
 	if #StageList == 0 then
@@ -249,23 +279,13 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 	connectcount = connectcount+1
 	local currentcount = connectcount
 	remote.OnServerEvent:Connect(function(player,passedvalues)
-		print("Git",connectcount,currentcount,passedvalues)
+		--print("Git",connectcount,currentcount,passedvalues)
 		if connectcount ~= currentcount then
 			return
 		end
-		print("Gitstage")
-		if passedvalues["Staging"] then
-			if #StageList == 0 then
-				return
-			end
-			for i,obj in ipairs(StageList[1]:GetChildren()) do
-				UseTrigger(obj.Value)
-			end
-			table.remove(StageList,1)
-		end
-		if passedvalues["Orientation"] then
-			
-		end
+		-------------------------------------------------------------
+		functions(passedvalues)
+		--------------------------------------------------------
 	end)
 end)
 
@@ -288,8 +308,9 @@ NG.CFrame = script.Parent.CFrame
 NG.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 399999993722699776)
 
 local orbit_alt = 400000
-local MaxHeight = -10000
 local Guidance = true]]
+local MaxHeight = -10000
+
 local Clockrate = script.Parent.ClockRate.Value
 
 local stepping = coroutine.create(function()
@@ -349,6 +370,17 @@ local stepping = coroutine.create(function()
 			end
 		end
 		-------------------------------------------------
+		
+		local alt = CurrentPos.Y
+		if (alt - MaxHeight > -5 or alt < 10000) then
+			alt = script.Parent.Position.Y
+			MaxHeight = math.max(alt,MaxHeight)
+		else
+			local NV = Instance.new("BodyVelocity")
+			NV.Parent = script.Parent
+			NV.MaxForce = Vector3.new(0, 3099999993722699776, 0)
+			NV.Velocity = Vector3.new(0,0,0)
+		end
 		--[[local alt = CurrentPos.Y
 		if (alt - MaxHeight > -5 or alt < 10000) and Guidance then
 			alt = script.Parent.Position.Y
