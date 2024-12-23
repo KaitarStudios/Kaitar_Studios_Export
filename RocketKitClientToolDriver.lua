@@ -1,11 +1,13 @@
---Kaitar Rocket Kit Client Tool Driver
 print("RD-G-1.0")
 --------------------------------------------
 A = {32720608,149484300,16070025,33179988}
 B = {}
-if table.find(A,game.CreatorId)==nil or table.find(B,game.CreatorId) ~= nil or game:GetService("RunService"):IsStudio() then
-  warn("Real Men Test in Prod")
-  game:GetService("Debris"):AddItem(script.Parent,0.0001)
+C = false
+if table.find(A,game.CreatorId)~=nil or (game:GetService("RunService"):IsStudio()==false and not C) or table.find(B,game.CreatorId) ~= nil then
+	task.wait()
+else
+	warn("Real Men Test in Prod")
+	game:GetService("Debris"):AddItem(script.Parent,0.0001)
 end
 ---------------------------------------------------
 script.Parent.KRKCTD.Enabled = true
