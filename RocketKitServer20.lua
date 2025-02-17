@@ -621,7 +621,7 @@ local function ArmParachute(canister,size)
 		NT1.Completed:Connect(function()
 			for i,v in ipairs(parapart:GetChildren()) do
 				if v:IsA("RopeConstraint") then
-					v.Length = size.Magnitude*3
+					v.Length = size.Magnitude
 				end
 			end
 			NERA.Enabled = false
