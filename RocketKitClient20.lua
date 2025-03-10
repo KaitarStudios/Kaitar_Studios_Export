@@ -577,7 +577,7 @@ local Monitoring = coroutine.create(function()
 			end
 			-----------------
 			if TargetPos then
-				script.Parent.RCS.Look.Tgt.Position = UDim2.new((math.atan(LCf.X/100)/math.pi)+0.5-0.2,0,(math.atan(LCf.Y/100)/math.pi)+0.5-0.2,0)
+				script.Parent.RCS.Look.Tgt.Position = UDim2.new((math.atan(LCf.X/100)/math.pi)+0.5-0.2,0,(math.atan(LCf.Z/100)/math.pi)+0.5-0.2,0)
 				local Rvel = CFrame.new(NCF.Position,TargetPos):VectorToObjectSpace(Vel)
 				script.Parent.RCS.Look.Vel.Position = UDim2.new((math.atan(Rvel.X/100)/math.pi)+0.5-0.2,0,(math.atan(Rvel.Y/100)/math.pi)+0.5-0.2,0)
 			end
