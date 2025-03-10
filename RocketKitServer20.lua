@@ -67,13 +67,15 @@ function Couple(part)
 	end 
 end
 ---------------------------------------------------------------------------
-function TogPlm(model,bool)
-	for i,v in ipairs(model:GetDescendants()) do
-		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
+function TogObj(v,bool)
+	if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
 			v.Enabled = bool
 		end
 		if v:IsA("Sound") then
 			v.Playing = bool
+		end
+		if v:IsA("ObjectValue") then
+			TogObj(v.Value)
 		end
 		if v:IsA("BasePart") or v:IsA("MeshPart") then
 			if v.Material == Enum.Material.Neon then
@@ -84,6 +86,10 @@ function TogPlm(model,bool)
 				end
 			end
 		end
+end
+function TogPlm(model,bool)
+	for i,v in ipairs(model:GetDescendants()) do
+		TogObj(v,bool)
 	end
 end
 -------------------------------------------------
