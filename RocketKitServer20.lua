@@ -628,11 +628,11 @@ local function ArmParachute(canister,size)
 			end
 			NERA.Enabled = false
 		end)
-		while parapart.Position.Y >20000 do
+		while parapart.Position.Y >3000 do
 			setdrag()
 			wait(0.1)
 		end
-		workspace.Terrain:FillBlock(CFrame.new((parapart.Position*Vector3.new(1,0,1))-Vector3.new(0,50,0)),Vector3.new(500,100,500),Enum.Material.Water)
+		workspace.Terrain:FillBlock(CFrame.new((parapart.Position*Vector3.new(1,0,1))-Vector3.new(0,250,0)),Vector3.new(500,500,500),Enum.Material.Water)
 		while parapart.Position.Y >100 do
 			setdrag()
 			wait(0.1)
