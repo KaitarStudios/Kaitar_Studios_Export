@@ -578,7 +578,8 @@ local function ArmParachute(canister,size)
 	NG2.Parent = NewAtt1
 	
 	local DragTweak = 1
-	local CraftDrag = 1
+	local CraftDrag = 0.1
+	local AltMul = 0.1
 	local SLP = 101.325 --kpa
 	local MMoDA = 0.02896968  --kg/mol
 	local SLT = 288.16 --K
@@ -599,7 +600,7 @@ local function ArmParachute(canister,size)
 	local parapart = NewAtt1.Parent
 	local Reentry = coroutine.create(function()
 		local function setdrag()
-			local AtmosphericPressure = SLP*math.exp(-(Gravity*parapart.Position.Y*0.28*MMoDA)/(SLT*UGC))
+			local AtmosphericPressure = SLP*math.exp(-(Gravity*parapart.Position.Y*AltMul*0.28*MMoDA)/(SLT*UGC))
 			Nvel2.MaxForce = DragTweak*(CraftDrag+parapart.Size.Magnitude/10)*AtmosphericPressure*(parapart.AssemblyLinearVelocity.Magnitude*0.28)^2
 			NG2.MaxTorque = Nvel2.MaxForce/20
 			--print(Nvel2.MaxForce)
