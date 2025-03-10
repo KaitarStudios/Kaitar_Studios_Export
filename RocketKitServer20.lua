@@ -577,7 +577,7 @@ local function ArmParachute(canister,size)
 	NG2.MaxTorque = 1000
 	NG2.Parent = NewAtt1
 	
-	local DragTweak = 0.1
+	local DragTweak = 1
 	local CraftDrag = 1
 	local SLP = 101.325 --kpa
 	local MMoDA = 0.02896968  --kg/mol
