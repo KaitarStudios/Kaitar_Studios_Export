@@ -395,6 +395,13 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 	ConnectedRemote = remote
 	connectcount = connectcount+1
 	local currentcount = connectcount
+	-------------------------------set network ownership
+	for i,v in ipairs(script.Parent.Parent.Parent:GetDescendants()) do
+		if v:IsA("BasePart") or v:IsA("UnionOperation") or v:IsA("MeshPart") then
+			v:SetNetworkOwner(player)
+		end
+	end
+	------------------------------
 	remote.OnServerEvent:Connect(function(player,passedvalues)
 		--print("Git",connectcount,currentcount,passedvalues)
 		if connectcount ~= currentcount then
