@@ -4,7 +4,7 @@ print("RD-G-1.0")
 A = {32720608,149484300,16070025,33179988}
 B = {}
 C = false
-if table.find(A,game.CreatorId)~=nil or (game:GetService("RunService"):IsStudio()==false and not C) or table.find(B,game.CreatorId) ~= nil then
+if true then--table.find(A,game.CreatorId)~=nil or (game:GetService("RunService"):IsStudio()==false and not C) or table.find(B,game.CreatorId) ~= nil then
 	task.wait()
 else
 	warn("Real Men Test in Prod")
