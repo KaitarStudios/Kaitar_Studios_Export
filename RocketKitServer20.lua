@@ -195,7 +195,7 @@ local function DockDeactivate(port)
 end
 -------------------------------------------------------------seperatron
 function Seperatron(model)
-	for i,v in ipairs(script:GetDescendants()) do
+	for i,v in ipairs(model:GetDescendants()) do
 		if v:IsA("VectorForce") then
 			local N =  v:FindFirstChildWhichIsA("NumberValue")
 			if N then
