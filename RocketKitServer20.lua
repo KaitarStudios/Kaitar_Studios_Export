@@ -199,6 +199,7 @@ function Seperatron(model)
 		if v:IsA("VectorForce") then
 			local N =  v:FindFirstChildWhichIsA("NumberValue")
 			if N then
+				v.Parent.Transparency = 0
 				v.Enabled = true
 				game:GetService("Debris"):AddItem(v.Parent,N.Value)
 			end
