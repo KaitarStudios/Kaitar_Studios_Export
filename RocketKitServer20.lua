@@ -7,7 +7,7 @@ local StageList = {}
 print("RD-2.0-3")
 --------------------------------------------
 function WeldModel(model)
-	print("Welded "..model.Name)
+	--print("Welded "..model.Name)
 	local Firstpart = nil
 	local Largepart = nil
 	local welds = {}
@@ -20,7 +20,7 @@ function WeldModel(model)
 			if v.Parent.Name == "KuelDriver" then
 				Weld = false
 			end
-			print(Weld)
+			--print(Weld)
 			if Weld then
 				if not Firstpart then
 					Firstpart = v
