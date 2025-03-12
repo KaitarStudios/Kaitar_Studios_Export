@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-2.0-3")
+print("RD-2.0-4")
 --------------------------------------------
 function WeldModel(model)
 	--print("Welded "..model.Name)
@@ -160,6 +160,8 @@ local function DockActivate(port)
 			if part:FindFirstChildWhichIsA("Attachment") == nil then
 				return
 			end
+			local State1 = part.Anchored
+			part.Anchored = true
 			port.otherport.Value = part
 			local NP = Instance.new("Part")
 			local NA = Instance.new("Attachment")
@@ -184,6 +186,7 @@ local function DockActivate(port)
 				NW.Part0 = port
 				NW.Part1 = part
 				NP:Destroy()
+				part.Anchored = State1
 			end)
 		end
 	end)
