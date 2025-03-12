@@ -494,6 +494,7 @@ NG.MaxTorque = Vector3.new(399999993722699776, 399999993722699776, 3999999937226
 
 local orbit_alt = 400000
 local Guidance = true]]
+
 local MaxHeight = -10000
 
 local Clockrate = script.Parent.ClockRate.Value
@@ -587,6 +588,7 @@ local stepping = coroutine.create(function()
 end)
 coroutine.resume(stepping)
 --------------------------------------
+local HandedServer = false
 local orbiting = coroutine.create(function()
 	while wait(0.5) do
 		MassTbl = {}
@@ -609,6 +611,15 @@ local orbiting = coroutine.create(function()
 		--print(AdjForce)
 		NV.Force = Vector3.new(0,AdjForce,0)
 		--print(NV.Force.Y)
+
+		
+		if not HandedServer and script.Parent.AssemblyLinearVelocity.Magnitude > 16000 then
+			for i,v in ipairs(script.Parent.Parent.Parent:GetDescendants()) do
+				if v:IsA("BasePart") or v:IsA("UnionOperation") or v:IsA("MeshPart") then
+					v:SetNetworkOwner()
+				end
+			end
+		end
 	end
 end)
 coroutine.resume(orbiting)
