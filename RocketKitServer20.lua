@@ -230,7 +230,7 @@ function UseTrigger(obj)
 	elseif obj.Name == "Canister" then
 		ArmParachute(obj,Vector3.new(0.708, 0.269, 0.708)*40)
 	elseif obj.Name == "KrossSRB" then
-		Seperatron(model)
+		Seperatron(obj)
 	else
 		if obj:IsA("BasePart") or obj:IsA("MeshPart") or obj:IsA("UnionOperation") or obj:IsA("TrussPart") then
 			obj.Transparency = 1-obj.Transparency
