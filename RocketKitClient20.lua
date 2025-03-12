@@ -195,7 +195,9 @@ function ActivateStage(Stage)
 		SetBar(NewBar,1.01)
 		TankTable[v][2] = NewBar
 		NewBar.Destroying:Once(function()
-			EngineTable[v][2] = nil
+			if EngineTable[v] then
+				EngineTable[v][2] = nil
+			end
 		end)
 	end
 end
