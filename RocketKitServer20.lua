@@ -614,6 +614,7 @@ local orbiting = coroutine.create(function()
 
 		
 		if not HandedServer and script.Parent.AssemblyLinearVelocity.Magnitude > 16000 then
+			HandedServer = true
 			for i,v in ipairs(script.Parent.Parent.Parent:GetDescendants()) do
 				if v:IsA("BasePart") or v:IsA("UnionOperation") or v:IsA("MeshPart") then
 					v:SetNetworkOwner()
