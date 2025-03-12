@@ -193,6 +193,18 @@ local function DockDeactivate(port)
 	end
 	port:FindFirstChildWhichIsA("Attachment"):ClearAllChildren()
 end
+-------------------------------------------------------------seperatron
+function Seperatron(model)
+	for i,v in ipairs(script:GetDescendants()) do
+		if v:IsA("VectorForce") then
+			local N =  v:FindFirstChildWhichIsA("NumberValue")
+			if N then
+				v.Enabled = true
+				game:GetService("Debris"):AddItem(v.Parent,N.Value)
+			end
+		end
+	end
+end
 ----------------------------------------------------------------
 function UseTrigger(obj)
 	if not obj then
@@ -216,6 +228,8 @@ function UseTrigger(obj)
 		obj:destroy()
 	elseif obj.Name == "Canister" then
 		ArmParachute(obj,Vector3.new(0.708, 0.269, 0.708)*40)
+	elseif obj.Name == "KrossSRB" then
+		Seperatron(model)
 	else
 		if obj:IsA("BasePart") or obj:IsA("MeshPart") or obj:IsA("UnionOperation") or obj:IsA("TrussPart") then
 			obj.Transparency = 1-obj.Transparency
