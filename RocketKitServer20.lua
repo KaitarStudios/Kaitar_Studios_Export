@@ -153,9 +153,9 @@ function RequestFuel(fuelmangager,mass)
 end
 ---------------------------------------------------------------- docking system
 local function DockActivate(port)
-	print(port)
+	--print(port)
 	port.Touched:Connect(function(part)
-		print(part)
+		--print(part)
 		if port.otherport.Value == nil and part.Name == "KattachmentPoint" then
 			if part:FindFirstChildWhichIsA("Attachment") == nil then
 				return
