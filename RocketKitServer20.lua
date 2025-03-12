@@ -151,12 +151,56 @@ function RequestFuel(fuelmangager,mass)
 		return mass
 	end
 end
+---------------------------------------------------------------- docking system
+local function DockActivate(port)
+	port.Touched:Connect(function(part)
+		if not port.otherport.Value and part.Name == "KattachmentPoint" then
+			if part:FindFirstChildWhichIsA("Attachment") == nil then
+				return
+			end
+			port.otherport.Value = part
+			local NP = Instance.new("Part")
+			local NA = Instance.new("Attachment")
+			local NR = Instance.new("RigidConstraint")
+			NA.Parent = NP
+			NA.CFrame = CFrame.new(Vector3.new(0,0,0))
+			NP.CFrame = port.Attachment.WorldCFrame
+			NR.Attachment0 = port.Attachment
+			NR.Attachment1 = NA
+			NR.Parent = NA
+			NP.Anchored = true
+			NP.Transparency = 1
+			NP.Parent = port.Attachment
+			local TS = game:GetService("TweenService")
+			local TO = TweenInfo.new(5,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
+			local CF = part:FindFirstChildWhichIsA("Attachment").WorldCFrame*CFrame.Angles(0,math.pi,0)
+			local NT = TS:Create(NP,TO,{["CFrame"] = CF})
+			NT:Play()
+			NT.Completed:Once(function()
+				local NW = Instance.new("WeldConstraint")
+				NW.Parent = port.Attachment
+				NW.Part0 = port
+				NW.Part1 = part
+				NP:Destroy()
+			end)
+		end
+	end)
+end
+
+local function DockDeactivate(port)
+	if port.otherport.Value then
+		port.otherport.Value:FindFirstChildWhichIsA("Attachment"):ClearAllChildren()
+	end
+	port:FindFirstChildWhichIsA("Attachment"):ClearAllChildren()
+end
 ----------------------------------------------------------------
 function UseTrigger(obj)
 	if not obj then
 		return
 	end
 	if obj.Name == "KuelDriver" then
+	elseif obj.Name == "KattachmentPoint" then
+		DockDeactivate(obj)
 	elseif obj.Name == "KngineDriver" then
 		local ind = table.find(EnabledEngines,obj)
 		if ind then
@@ -191,6 +235,8 @@ function SetTrigger(obj)
 	end
 	if obj.Name == "KdhesiveDecoupler" then
 		Couple(obj)
+	elseif obj.Name == "KattachmentPoint" then
+		DockActivate(obj)
 	elseif obj.Name == "KngineDriver" then
 		local NA = Instance.new("Attachment")
 		NA.Parent = obj
@@ -710,39 +756,3 @@ script.Parent.OrbitalUse.Event:Connect(function(dictionary)
 		--end
 	end
 end)
----------------------------------------------------------------- docking system
-local function DockActivate(port)
-	port.Touched:Connect(function(part)
-		if not port.otherport.Value and part.Name == "KattachmentPoint" then
-			if part:FindFirstChildWhichIsA("Attachment") == nil then
-				return
-			end
-			port.otherport.Value = part
-			local NP = Instance.new("Part")
-			local NA = Instance.new("Attachment")
-			local NR = Instance.new("RigidConstraint")
-			NA.Parent = NP
-			NA.CFrame = CFrame.new(Vector3.new(0,0,0))
-			NP.CFrame = port.Attachment.WorldCFrame
-			NR.Attachment0 = port.Attachment
-			NR.Attachment1 = NA
-			NR.Parent = NA
-			NP.Anchored = true
-			NP.Transparency = 1
-			NP.Parent = port.Attachment
-			local TS = game:GetService("TweenService")
-			local TO = TweenInfo.new(5,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
-			local CF = part:FindFirstChildWhichIsA("Attachment").WorldCFrame*CFrame.Angles(0,math.pi,0)
-			local NT = TS:Create(NP,TO,{["CFrame"] = CF})
-			NT:Play()
-			NT.Completed:Once(function()
-				local NW = Instance.new("WeldConstraint")
-				NW.Parent = port.Attachment
-				NW.Part0 = port
-				NW.Part1 = part
-				NP:Destroy()
-			end)
-		end
-	end)
-end
-DockActivate(script.Parent)
