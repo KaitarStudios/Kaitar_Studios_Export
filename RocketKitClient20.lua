@@ -237,6 +237,10 @@ while folder ~= nil and stages <100 do
 				local Dec = Ref1.Sep:Clone()
 				Dec.Parent = Item1
 				--print(Dec)
+			elseif action.Value.Name == "KattachmentPoint" then
+				local Dec = Ref1.Sep:Clone()
+				Dec.Parent = Item1
+				Dec.Text = ">|"
 			end
 		end
 	end
