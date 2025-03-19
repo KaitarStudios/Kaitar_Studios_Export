@@ -237,15 +237,15 @@ script.Remote.Value.OnServerEvent:Connect(function(v44, v45)
 	print("rec");
 	ver3(v45, v44);
 end);
-v3.PlayerAdded:Connect(function(v46)
+v3.PlayerAdded:Connect(function(player)
 	wait(1);
-	local v47 = v46:GetJoinData();
-	local v48 = v47['TeleportData'];
-	if v48 then
-		if (v48[3] == nil) then
+	local playerdata = player:GetJoinData();
+	local TPdata = playerdata['TeleportData'];
+	if TPdata then
+		if (TPdata[3] == nil) then
 			warn("Legacy Versions not supported");
-			local v117 = v48[1];
-			local v118 = v48[2];
+			local v117 = TPdata[1];
+			local v118 = TPdata[2];
 			local v119 = false;
 			for v131, v132 in ipairs(script.Parent.Queues:GetChildren()) do
 				if (v132:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == v117) then
@@ -259,16 +259,16 @@ v3.PlayerAdded:Connect(function(v46)
 				v140.Parent = game:GetService("ServerStorage").PlaneSpawn.Cache;
 				newQueue(v140, v117);
 				print(v117, v139);
-				AddPlr(v46);
+				AddPlr(player);
 			else
-				AddPlr(v46);
+				AddPlr(player);
 			end
-		elseif (v48[3] == 3) then
-			ver3(v48, v46);
+		elseif (TPdata[3] == 3) then
+			ver3(TPdata, player);
 		else
 			warn("You are using an incorrect version or syntax");
 		end
 	else
-		print(v46.Name .. " Joined without data (planemanager)");
+		print(player.Name .. " Joined without data (planemanager)");
 	end
 end);
