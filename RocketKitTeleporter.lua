@@ -1,3 +1,14 @@
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.8) ~  Much Love, Ferib 
+
+]]--
+
 A = {32720608,149484300,16070025,33179988};
 B = {};
 if ((table.find(A, game.CreatorId) == nil) or (table.find(B, game.CreatorId) ~= nil)) then
@@ -237,15 +248,15 @@ script.Remote.Value.OnServerEvent:Connect(function(v44, v45)
 	print("rec");
 	ver3(v45, v44);
 end);
-v3.PlayerAdded:Connect(function(player)
+v3.PlayerAdded:Connect(function(v46)
 	wait(1);
-	local playerdata = player:GetJoinData();
-	local TPdata = playerdata['TeleportData'];
-	if TPdata then
-		if (TPdata[3] == nil) then
+	local v47 = v46:GetJoinData();
+	local v48 = v47['TeleportData'];
+	if v48 then
+		if (v48[3] == nil) then
 			warn("Legacy Versions not supported");
-			local v117 = TPdata[1];
-			local v118 = TPdata[2];
+			local v117 = v48[1];
+			local v118 = v48[2];
 			local v119 = false;
 			for v131, v132 in ipairs(script.Parent.Queues:GetChildren()) do
 				if (v132:FindFirstChildWhichIsA("SurfaceGui"):FindFirstChildWhichIsA("TextLabel").Text == v117) then
@@ -259,16 +270,16 @@ v3.PlayerAdded:Connect(function(player)
 				v140.Parent = game:GetService("ServerStorage").PlaneSpawn.Cache;
 				newQueue(v140, v117);
 				print(v117, v139);
-				AddPlr(player);
+				AddPlr(v46);
 			else
-				AddPlr(player);
+				AddPlr(v46);
 			end
-		elseif (TPdata[3] == 3) then
-			ver3(TPdata, player);
+		elseif (v48[3] == 3) then
+			ver3(v48, v46);
 		else
 			warn("You are using an incorrect version or syntax");
 		end
 	else
-		print(player.Name .. " Joined without data (planemanager)");
+		print(v46.Name .. " Joined without data (planemanager)");
 	end
 end);
