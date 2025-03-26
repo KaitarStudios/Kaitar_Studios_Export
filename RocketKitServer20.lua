@@ -68,8 +68,8 @@ function Couple(part)
 end
 ---------------------------------------------------------------------------
 function TogPlm(model,bool)
-	for i,v in ipairs(model:GetDescendants()) do
-		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
+	--for i,v in ipairs(model:GetDescendants()) do
+		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") or v:IsA("Script")  then
 			v.Enabled = bool
 		end
 		if v:IsA("Sound") then
@@ -84,7 +84,7 @@ function TogPlm(model,bool)
 				end
 			end
 		end
-	end
+	--end
 end
 -------------------------------------------------
 function StartEngine(enginedriver)
