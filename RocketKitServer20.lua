@@ -72,6 +72,9 @@ function TogPlm(model,bool)
 		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") or v:IsA("Script")  then
 			v.Enabled = bool
 		end
+		if v:IsA("BoolValue") then
+			v.Value = bool
+		end
 		if v:IsA("Sound") then
 			v.Playing = bool
 		end
