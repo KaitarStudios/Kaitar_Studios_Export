@@ -248,6 +248,8 @@ function UseTrigger(obj)
 			obj:Fire()
 		elseif obj:IsA("BoolValue") then
 			obj.Value = not obj.Value
+		elseif obj:IsA("PrismaticConstraint") then
+			obj.Value = not obj.Value
 		end
 	end
 end
