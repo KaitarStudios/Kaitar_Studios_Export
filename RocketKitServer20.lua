@@ -81,7 +81,8 @@ function Couple(part)
 	end 
 end
 ---------------------------------------------------------------------------
-function TogPlm(model,bool)
+--function TogPlm(model,bool)
+function TogPlm(v,bool)
 	--for i,v in ipairs(model:GetDescendants()) do
 		if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") or v:IsA("Script")  then
 			v.Enabled = bool
