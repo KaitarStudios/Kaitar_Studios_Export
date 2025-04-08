@@ -45,6 +45,7 @@ function WeldModel(model)
 	for i,v in ipairs(welds) do
 		v.Part1 = Largepart
 	end
+	return Largepart
 end
 -----------------------------------------------------------------------------
 local function GetTouchingParts(part)
