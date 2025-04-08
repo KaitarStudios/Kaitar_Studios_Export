@@ -11,8 +11,10 @@ function WeldModel(model)
 	local Firstpart = nil
 	local Largepart = nil
 	local welds = {}
+	local parts = {}-------------------------------------------------
 	for i,v in ipairs(model:GetDescendants()) do
 		if v:IsA("BasePart") or v:IsA("MeshPart") or v:IsA("UnionOperation") or v:IsA("TrussPart") then
+			table.insert(parts,v)---------------------------------------
 			local Weld = true
 			if ( v:FindFirstChildWhichIsA("Attachment") or v:FindFirstChildWhichIsA("WeldConstraint") ) and not v.Anchored then
 				Weld = false
@@ -45,7 +47,18 @@ function WeldModel(model)
 	for i,v in ipairs(welds) do
 		v.Part1 = Largepart
 	end
-	return Largepart
+	-----------------------------------------------------
+	local NA = Instance.new("Attachment")
+	NA.Parent = Largepart
+	------------------------------------------------
+	local NV = Instance.new("VectorForce")
+	NV.Attachment0 = NA
+	NV.Parent = NA
+	NV.ApplyAtCenterOfMass = true
+	NV.RelativeTo = Enum.ActuatorRelativeTo.World
+	NV.Enabled = true
+	NV.Force = Vector3.new(0,0,0)
+	return Largepart,NV,parts --------------------------------------------------
 end
 -----------------------------------------------------------------------------
 local function GetTouchingParts(part)
@@ -285,19 +298,28 @@ function EvalMass(model)
 	end
 	MassTbl[model.Name] = Mass
 end
-function Centripetal()
+function Centripetal(parttbl)
 	local alt = script.Parent.Position.Y
 	local muM_overRsquare = G0*R0*R0/((R0+alt)^2)
 	local TotalMass = 0
-	for i,v in pairs(MassTbl) do
-		TotalMass = TotalMass+v
-	end
+
 	local Cen = (script.Parent.AssemblyLinearVelocity*Vector3.new(1,0,1)).Magnitude^2/(R0+alt)
 	local g = (muM_overRsquare-Cen)
+
+	if parttbl then
+		for i,v in pairs(parttbl) do
+			TotalMass = TotalMass+v:GetMass()
+		end
+		return (workspace.Gravity-g)*TotalMass,g,TotalMass
+	else
+		for i,v in pairs(MassTbl) do
+			TotalMass = TotalMass+v
+		end
+		return (workspace.Gravity-g)*TotalMass,g,TotalMass
+	end
 	--print(Cen)
 	--print((workspace.Gravity+Cen-muM_overRsquare))
 	--print((workspace.Gravity+Cen-muM_overRsquare)*TotalMass)
-	return (workspace.Gravity-g)*TotalMass,g,TotalMass
 end
 ----------------------------------------------------
 for i,Trigger in ipairs(script.Parent.Staging:GetDescendants()) do
@@ -318,9 +340,10 @@ else
 	Rocket = script.Parent.Parent.Parent:GetChildren()
 end
 print(Rocket)
+local StageMasses = {} --{part,Vector,mass} ---------------------------------------------
 for i,Bloc in ipairs(Rocket) do
-	WeldModel(Bloc) -- rocket weld
 	EvalMass(Bloc)
+	StageMasses[i] = {WeldModel(Bloc)} -- rocket weld -----------------------
 end
 
 for i,group in ipairs(script.Parent.Staging:GetChildren()) do
@@ -602,6 +625,7 @@ coroutine.resume(stepping)
 local HandedServer = false
 local orbiting = coroutine.create(function()
 	while wait(0.5) do
+		--[[
 		MassTbl = {}
 		for i,Bloc in ipairs(Rocket) do
 			local P1 = Bloc:FindFirstChildWhichIsA("Part")
@@ -622,8 +646,12 @@ local orbiting = coroutine.create(function()
 		--print(AdjForce)
 		NV.Force = Vector3.new(0,AdjForce,0)
 		--print(NV.Force.Y)
-
-		
+		]]
+		for i,v in pairs(StageMasses) do
+			local AdjForce,g,m = Centripetal(v[3])
+			v[2].Force = Vector3.new(0,AdjForce,0)
+		end
+			
 		if not HandedServer and script.Parent.AssemblyLinearVelocity.Magnitude > 16000 then
 			HandedServer = true
 			for i,v in ipairs(script.Parent.Parent.Parent:GetDescendants()) do
@@ -747,7 +775,7 @@ script.Parent.OrbitalUse.Event:Connect(function(dictionary)
 				DragRocketTo(((script.Parent.Position*Vector3.new(1,0,1)).Unit*2000)+(script.Parent.Position*Vector3.new(0,1,0)),NA)
 				--NVel.Enabled = true
 				--print(1)
-				coroutine.close(orbiting)
+				--coroutine.close(orbiting)
 				coroutine.close(stepping)
 			end
 		else
