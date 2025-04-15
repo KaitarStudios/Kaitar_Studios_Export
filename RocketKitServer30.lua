@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-2.0-5")
+print("RD-3.0-1")
 --------------------------------------------
 function WeldModel(model)
 	--print("Welded "..model.Name)
@@ -643,6 +643,7 @@ coroutine.resume(stepping)
 local HandedServer = false
 local orbiting = coroutine.create(function()
 	while wait(0.5) do
+		print(EnabledEngines)
 		--[[
 		MassTbl = {}
 		for i,Bloc in ipairs(Rocket) do
