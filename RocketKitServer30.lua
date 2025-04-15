@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.0-1")
+print("RD-3.0-2")
 --------------------------------------------
 function WeldModel(model)
 	--print("Welded "..model.Name)
@@ -121,6 +121,7 @@ function InitializeEngine(enginedriver)
 	--local Thrust = enginedriver.Impulse.Value*workspace.Gravity
 	for i,v in ipairs(EnabledEngines) do
 		if v[1] == enginedriver then
+			print(i)
 			return i
 		end
 	end
@@ -139,6 +140,7 @@ function InitializeEngine(enginedriver)
 	}
 	table.insert(EnabledEngines,Etable)
 	StartEngine(enginedriver)
+	print(#EnabledEngines)
 	return #EnabledEngines --------------------------------------<<<<<<<<<<<<<<<<<<<<<< Now engines dont get removed
 end
 ---------------------------------------------------------
