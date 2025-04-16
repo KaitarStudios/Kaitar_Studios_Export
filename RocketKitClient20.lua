@@ -641,13 +641,20 @@ end)
 --script.Communicator.OnClientEvent:Connect(function(dict)
 script.Parent.Klientdriver2.Communicator2.OnServerEvent:Connect(function(plr,dict)
 	if dict["Flameout"] then
-		print(dict["Flameout"])
+		--print(dict["Flameout"])
 		for RowNum,RowContents in ipairs(EngineTable) do
 			if RowContents[1]==dict["Flameout"] then
 				SetBar(RowContents[2],-0.01)
 				wait()
 				RowContents[2]=nil
 				break
+			end
+		end
+	elseif dict["ThrottleChange"] then
+		for RowNum,RowContents in ipairs(EngineTable) do
+			if RowContents[1]==dict["ThrottleChange"][1] then
+				SetBar(RowContents[2],dict["ThrottleChange"][2])
+				wait()
 			end
 		end
 	end
