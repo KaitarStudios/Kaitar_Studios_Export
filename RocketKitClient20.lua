@@ -1,5 +1,6 @@
 --Kaitar Rocket Kit Client GUI Driver
 --presets
+print("RD-C-3.0")
 local R0 = 6357000/0.28 -- earth's diameter
 local G0 = 9.81/0.28
 ----------------------------------------------------------------
