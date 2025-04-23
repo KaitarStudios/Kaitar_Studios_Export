@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.0-4")
+print("RD-3.0-5")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -78,7 +78,7 @@ function Couple(part)
 		--print(itm:IsDescendantOf(script.Parent.Parent))
 		local weld = Instance.new("WeldConstraint")
 		weld.Name = "AnchorConstraint"
-		weld.Part0 = script.Parent
+		weld.Part0 = part
 		weld.Part1 = tpart
 		weld.Parent = part
 	end 
