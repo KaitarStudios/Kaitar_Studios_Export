@@ -4,8 +4,11 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.0-3")
+print("RD-3.0-4")
 --------------------------------------------
+local TS = game:GetService("TweenService")
+local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
+
 function WeldModel(model)
 	--print("Welded "..model.Name)
 	local Firstpart = nil
@@ -259,6 +262,12 @@ function UseTrigger(obj)
 		end
 	elseif obj.Name == "KdhesiveDecoupler" then
 		obj:destroy()
+	elseif obj.Name == "KdhesiveDecoupler2" then
+		local NT = TS:Create(NG,TO,{["Position"]=Vector3.new(-30,0,0)})
+		NT:Play()
+		NT.Completed:Connect(function()
+			obj:destroy()
+		end)
 	elseif obj.Name == "Canister" then
 		ArmParachute(obj,Vector3.new(0.708, 0.269, 0.708)*40)
 	elseif obj.Name == "KrossSRB" then
@@ -286,6 +295,9 @@ function SetTrigger(obj)
 	end
 	if obj.Name == "KdhesiveDecoupler" then
 		Couple(obj)
+	elseif obj.Name == "KdhesiveDecoupler2" then
+		Couple(obj)
+		Couple(obj:FindFirstChildWhichIsA("Part"))
 	elseif obj.Name == "KattachmentPoint" then
 		DockActivate(obj)
 	elseif obj.Name == "KngineDriver" then
@@ -472,8 +484,6 @@ end
 
 -----------------------------------------------------
 --local StageOnFlameOut = true
-local TS = game:GetService("TweenService")
-local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
 local NT = TS:Create(NG,TO,{["AngularVelocity"]=Vector3.new(0,0,0)})
 local TO2 = TweenInfo.new(10,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
 local NT2 = TS:Create(NVel,TO2,{["VectorVelocity"]=Vector3.new(0,0,0)})
