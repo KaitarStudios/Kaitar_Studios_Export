@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.0-5")
+print("RD-3.1-0")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -242,6 +242,7 @@ function Seperatron(model)
 end
 ----------------------------------------------------------------
 function UseTrigger(obj)
+	print(obj)
 	if not obj then
 		return
 	end
@@ -263,9 +264,11 @@ function UseTrigger(obj)
 	elseif obj.Name == "KdhesiveDecoupler" then
 		obj:destroy()
 	elseif obj.Name == "KdhesiveDecoupler2" then
-		local NT = TS:Create(NG,TO,{["Position"]=Vector3.new(-30,0,0)})
+		--print("Sepatron")
+		local NT = TS:Create(obj:FindFirstChildWhichIsA("Attachment"),TO,{["Position"]=Vector3.new(-100,0,0)})
 		NT:Play()
 		NT.Completed:Connect(function()
+			--print("Sepatron")
 			obj:destroy()
 		end)
 	elseif obj.Name == "Canister" then
@@ -273,7 +276,11 @@ function UseTrigger(obj)
 	elseif obj.Name == "KrossSRB" then
 		Seperatron(obj)
 	elseif obj.Name == "KandingMod" then
-		RTLS(obj)
+		if not obj.Target.Value then
+			warn("No Landing Pad")
+		else
+			RTLS(obj)
+		end
 	else
 		if obj:IsA("BasePart") or obj:IsA("MeshPart") or obj:IsA("UnionOperation") or obj:IsA("TrussPart") then
 			obj.Transparency = 1-obj.Transparency
@@ -298,6 +305,7 @@ function SetTrigger(obj)
 	elseif obj.Name == "KdhesiveDecoupler2" then
 		Couple(obj)
 		Couple(obj:FindFirstChildWhichIsA("Part"))
+		--print(obj:FindFirstChildWhichIsA("Part"))
 	elseif obj.Name == "KattachmentPoint" then
 		DockActivate(obj)
 	elseif obj.Name == "KngineDriver" then
@@ -307,6 +315,10 @@ function SetTrigger(obj)
 		VF.Parent = obj
 		VF.Attachment0 = NA
 		VF.Enabled = false
+	elseif obj.Name == "KandingMod" then
+		if not obj.Target.Value then
+			warn("No Landing Pad")
+		end
 	else
 
 	end
@@ -656,7 +668,7 @@ coroutine.resume(stepping)
 local HandedServer = false
 local orbiting = coroutine.create(function()
 	while wait(0.5) do
-		print(EnabledEngines)
+		--print(EnabledEngines)
 		--[[
 		MassTbl = {}
 		for i,Bloc in ipairs(Rocket) do
@@ -857,6 +869,7 @@ script.Parent.OrbitalUse.Event:Connect(function(dictionary)
 end)
 ----------------------------------------------------------------------------------------------Scary!!!!
 function RTLS(PriPart)
+	local G1 = workspace.Gravity
 	local Target = PriPart.Target.Value
 	local Obj = {}
 	Obj["NA"] = Instance.new("Attachment")
@@ -869,6 +882,10 @@ function RTLS(PriPart)
 	Obj["NG"].MaxTorque = 399999993722699776
 	Obj["NG"].Attachment0 = Obj["NA"]
 	Obj["NG"].Enabled = true
+	Obj["NV"] = Instance.new("VectorForce")
+	Obj["NV"].Parent = Obj["NA"]
+	Obj["NV"].Force = Vector3.new(0,0,0)
+	Obj["NV"].Attachment0 = Obj["NA"]
 
 	local function getmass(Model)
 		local Mass = 0
@@ -882,7 +899,9 @@ function RTLS(PriPart)
 		return Mass
 	end
 	local Mass = getmass(PriPart.Parent)
-
+	
+	
+	-- not functional, vestigial 
 	local Engines = {} -- {Driver,Thrust,State,RefCode}
 	Engines = {}
 	local i = 0
@@ -908,186 +927,224 @@ function RTLS(PriPart)
 	local AWeight = 1
 	local AV = 0
 	local A = 0
-	local Sleeper = coroutine.create(function()
-		local LV = PriPart.AssemblyLinearVelocity
-		local CV = PriPart.AssemblyLinearVelocity
-		A = 0
-		while true do
-			task.wait(0.1)
-			CV = PriPart.AssemblyLinearVelocity
-			if AV > 0 then
-				A = ((LV-CV)/0.1+Vector3.new(0,G0,0)).Magnitude
-				AWeight = math.clamp((AV/A)*AWeight,0.00001,100)
-				--print(math.round(A),math.round(AV),AWeight,math.round(Mass))
+	--local Sleeper = coroutine.create(function()
+	--	local LV = PriPart.AssemblyLinearVelocity
+	--	local CV = PriPart.AssemblyLinearVelocity
+	--	A = 0
+	--	while true do
+	--		task.wait(0.1)
+	--		CV = PriPart.AssemblyLinearVelocity
+	--		if AV > 0 then
+	--			A = ((LV-CV)/0.1+Vector3.new(0,G1,0)).Magnitude
+	--			AWeight = math.clamp((AV/A)*AWeight,0.00001,100)
+	--			--print(math.round(A),math.round(AV),AWeight,math.round(Mass))
+	--		end
+	--		LV = CV
+	--	end
+	--end)
+	--coroutine.resume(Sleeper)
+	local function StopEngines()
+		for n,v in ipairs(PriPart:FindFirstChild("Engines"):GetChildren()) do
+			if v:IsA("ObjectValue") then
+				StopEngine(v.Value)
 			end
-			LV = CV
 		end
-	end)
-	coroutine.resume(Sleeper)
+	end
+	local function StartEngines()
+		for n,v in ipairs(PriPart:FindFirstChild("Engines"):GetChildren()) do
+			if v:IsA("ObjectValue") then
+				StartEngine(v.Value)
+			end
+		end
+	end
+
 
 	local function RequestTWR(val)
-		AV = val
-		val = val*AWeight
+		if val == 0 then
+			StopEngines()
+		else
+			StartEngines()
+		end
 		Mass = getmass(PriPart.Parent)
-		local T = Mass*val
-		for i,v in pairs(Engines) do
-			if T > 0 and EnabledEngines[v[4]][9] == true then--v[3] ~= 3 then
-				T = T - v[2]
-				if v[3] == false then
-					StartEngine(v[1])
-					v[3] = true
-					--start
-				end
-			elseif v[3] == true then
-				--UseTrigger(v)
-				StopEngine(v[1])
-				v[3] = false
-				--shut		
-			end			
-		end
-		T = 0
-		for i,v in pairs(Engines) do
-			if v[3] == true then
-				T = T + v[2]
+		Obj["NV"].Force = Vector3.new(0,0,-Mass*val)
+		print(Mass*val)
+	end
+	--local function RequestTWR(val)
+	--	AV = val
+	--	val = val*AWeight
+	--	Mass = getmass(PriPart.Parent)
+	--	local T = Mass*val
+	--	for i,v in pairs(Engines) do
+	--		if T > 0 and EnabledEngines[v[4]][9] == true then--v[3] ~= 3 then
+	--			T = T - v[2]
+	--			if v[3] == false then
+	--				StartEngine(v[1])
+	--				v[3] = true
+	--				--start
+	--			end
+	--		elseif v[3] == true then
+	--			--UseTrigger(v)
+	--			StopEngine(v[1])
+	--			v[3] = false
+	--			--shut		
+	--		end			
+	--	end
+	--	T = 0
+	--	for i,v in pairs(Engines) do
+	--		if v[3] == true then
+	--			T = T + v[2]
+	--		end
+	--	end
+	--	--print(math.round(T),math.round(Mass*val))
+	--	local T = math.clamp((Mass*val)/T,0,1)
+	--	for i,v in pairs(Engines) do
+	--		--print(EnabledEngines[v[4]][8])
+	--		if v[3] == true then
+	--			EnabledEngines[v[4]][8] = T
+	--		else
+	--			EnabledEngines[v[4]][8] = 0
+	--		end
+	--		--print(EnabledEngines[v[4]][8])
+	--	end
+	--	--print(val,Engines,EnabledEngines)
+	--end
+	local Reentry = coroutine.create(function()
+		RequestTWR(0)
+		wait(2)
+		Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),Target.Position*Vector3.new(1,0,1))
+		--local Thrust = 500000
+		print("Retrophase")
+		local MainShut = false -- high thrust retrograde
+		--Obj["NG"].MaxTorque = 2400000
+		--script.Parent.aeropart.Gyro2.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
+		local TargetVelocity
+		RequestTWR(200)
+		print(200)
+		while wait() do
+			local DistanceToTransverse = (Target.Position-PriPart.Position)*Vector3.new(1,0,1)
+			--local MagToTransverse = DistanceToTransverse.Magnitude
+			--local HeightToFall = PriPart.Position.Y - 30000
+			local a = G0/2
+			local b = -PriPart.AssemblyLinearVelocity.Y
+			local c = -(PriPart.Position.Y-Target.Position.Y-10000)
+			--local TimeToFall = (-b-math.sqrt(b^2-4*a*c))/(2*a) -------------------fix someday
+			local TimeToFall = (-b+math.sqrt(b^2-4*a*c))/(2*a)
+			--print((-b+math.sqrt(b^2-4*a*c))/(2*a))
+			--print(TimeToFall)
+			--local TimeToFall = (-PriPart.AssemblyLinearVelocity.Y+math.sqrt(PriPart.AssemblyLinearVelocity.Y^2-4*0.5*-G0*RelToFloorYPos))/(2*0.5*G0)
+			--local TimeToFall = (PriPart.AssemblyLinearVelocity.Y+math.sqrt((PriPart.AssemblyLinearVelocity.Y^2)+(2*G0*HeightToFall)))/G0
+			--TargetVelocity = -1*DistanceToTransverse*Vector3.new(1.4/TimeToFall,0,1.4/TimeToFall) --+Vector3.new(0,PriPart.AssemblyLinearVelocity.Y,0)
+			--print(TargetVelocity,PriPart.AssemblyLinearVelocity)
+			--print(math.round(TimeToFall*1000)/1000)
+			TargetVelocity = DistanceToTransverse/TimeToFall
+			--print((TargetVelocity-PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1)).Magnitude)
+			Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),TargetVelocity)
+			--x=[[script.Parent.aeropart.Gyro2.BodyGyro.CFrame = CFrame.lookAt(TargetVelocity,PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1)) --inverted intentionally]]
+			local diff = (PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1) - TargetVelocity).Magnitude
+			if diff < 100 and MainShut == false then
+				--ShutEngines()
+				--wait(0.1) 
+				--RetroEngine()
+				--wait(0.1)
+				MainShut = true
+				RequestTWR(40)
+				print(40)
+			end
+			if diff <10 then
+				--ShutEngines()
+				RequestTWR(0)
+				print(0)
+				break
 			end
 		end
-		--print(math.round(T),math.round(Mass*val))
-		local T = math.clamp((Mass*val)/T,0,1)
-		for i,v in pairs(Engines) do
-			--print(EnabledEngines[v[4]][8])
-			if v[3] == true then
-				EnabledEngines[v[4]][8] = T
-			else
-				EnabledEngines[v[4]][8] = 0
-			end
-			--print(EnabledEngines[v[4]][8])
-		end
-		--print(val,Engines,EnabledEngines)
-	end
-	RequestTWR(0)
-	Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),Target.Position*Vector3.new(1,0,1))
-	wait(2)
-	local Thrust = 500000
-	print("Retrophase")
-	local MainShut = false -- high thrust retrograde
-	--Obj["NG"].MaxTorque = 2400000
-	--script.Parent.aeropart.Gyro2.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
-	local TargetVelocity
-	RequestTWR(200)
-	print(200)
-	while wait() do
-		local DistanceToTransverse = (Target.Position-PriPart.Position)*Vector3.new(1,0,1)
-		--local MagToTransverse = DistanceToTransverse.Magnitude
-		--local HeightToFall = PriPart.Position.Y - 30000
-		local a = G0/2
-		local b = -PriPart.AssemblyLinearVelocity.Y
-		local c = -(PriPart.Position.Y-Target.Position.Y)
-		--local TimeToFall = (-b-math.sqrt(b^2-4*a*c))/(2*a) -------------------fix someday
-		local TimeToFall = (-b+math.sqrt(b^2-4*a*c))/(2*a)
-		--print((-b+math.sqrt(b^2-4*a*c))/(2*a))
-		--print(TimeToFall)
-		--local TimeToFall = (-PriPart.AssemblyLinearVelocity.Y+math.sqrt(PriPart.AssemblyLinearVelocity.Y^2-4*0.5*-G0*RelToFloorYPos))/(2*0.5*G0)
-		--local TimeToFall = (PriPart.AssemblyLinearVelocity.Y+math.sqrt((PriPart.AssemblyLinearVelocity.Y^2)+(2*G0*HeightToFall)))/G0
-		--TargetVelocity = -1*DistanceToTransverse*Vector3.new(1.4/TimeToFall,0,1.4/TimeToFall) --+Vector3.new(0,PriPart.AssemblyLinearVelocity.Y,0)
-		--print(TargetVelocity,PriPart.AssemblyLinearVelocity)
-		--print(math.round(TimeToFall*1000)/1000)
-		TargetVelocity = DistanceToTransverse/TimeToFall
-		--print((TargetVelocity-PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1)).Magnitude)
-		Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),TargetVelocity)
-		--x=[[script.Parent.aeropart.Gyro2.BodyGyro.CFrame = CFrame.lookAt(TargetVelocity,PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1)) --inverted intentionally]]
-		local diff = (PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1) - TargetVelocity).Magnitude
-		if diff < 100 and MainShut == false then
-			--ShutEngines()
-			--wait(0.1) 
-			--RetroEngine()
-			--wait(0.1)
-			MainShut = true
-			RequestTWR(40)
-			print(40)
-		end
-		if diff <10 then
-			--ShutEngines()
-			RequestTWR(0)
-			print(0)
-			break
-		end
-	end
-	x=[[script.Parent.aeropart.Gyro2.BodyGyro.MaxTorque = Vector3.new(00000, 00000, 00000)]]
+		x=[[script.Parent.aeropart.Gyro2.BodyGyro.MaxTorque = Vector3.new(00000, 00000, 00000)]]
 
-	x = [[local descendants = script.Parent:GetDescendants() -- Yikes!
+		x = [[local descendants = script.Parent:GetDescendants() -- Yikes!
 	for index, descendant in pairs(descendants) do
 		if descendant:IsA("BasePart") then
 			descendant.AssemblyLinearVelocity = TargetVelocity
 		end
 	end]]
-	RequestTWR(0)
-	print("Balistic phase")
-	while PriPart.Position.Y > 12000 do
-		wait(0.2)
-		Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
-	end
-	--script.Parent.aeropart.Gyro1.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
-	--print("Glide phase")
-	--script.Parent.Fin.Value = true
-	x=[[script.Parent.aeropart.Script.Disabled = false]]
-	--while wait() do
-	--	local RelPosDiff =Target.Position-PriPart.Position
-	--	local BottomCap =(RelPosDiff.X^2+RelPosDiff.Z^2)^0.5
-	--	local BottomCutted = Vector3.new(RelPosDiff.X,BottomCap,RelPosDiff.Z)
-	--	--print(BottomCap)
-	--	Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),BottomCutted)
-	--	if BottomCap < 40000 then
-	--		break
-	--	end
-	--end
-	PriPart.Touched:Connect(function(part)
-		if (PriPart.AssemblyLinearVelocity - part.AssemblyLinearVelocity).Magnitude>69 then
-			local E = Instance.new("Explosion")
-			E.Parent = workspace
-			E.Position = PriPart.Position
-			E.DestroyJointRadiusPercent = 1
-			E.BlastRadius = 50
-			E.BlastPressure = 10000
+		RequestTWR(0)
+		print("Balistic phase")
+		while PriPart.Position.Y > 12000 do
+			wait(0.2)
+			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
 		end
-	end)
-	
-	print("Cancel Phase")
-	AWeight = 1
-	--Warning!! this is a Beizer derivitive
-	local function Beizer(N,Point,limit)
-		local p0 = PriPart.Position
-		local p1 = PriPart.Position+PriPart.AssemblyLinearVelocity*3
-		local p2 = Point
-		local p3 = Point
-		local function RB(t)
-			return ((1-t)^3)*p0 + (3*(1-t)^2)*t*p1 + 3*(1-t)*(t^2)*p2 + (t^3)*p3
-		end
-		local DT = (RB(1/N)-RB(0)) -- Vel/s
-		DT = DT.Magnitude/PriPart.AssemblyLinearVelocity.Magnitude -- Vel multiplier
-		--print(DT)
-		--DT = DT
-		--print(DT)
-		local points = {}
-		--local N = 200
-		for t = 0,limit,1/N do
-			table.insert(points,RB(t))
+		--script.Parent.aeropart.Gyro1.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
+		--print("Glide phase")
+		--script.Parent.Fin.Value = true
+		x=[[script.Parent.aeropart.Script.Disabled = false]]
+		--while wait() do
+		--	local RelPosDiff =Target.Position-PriPart.Position
+		--	local BottomCap =(RelPosDiff.X^2+RelPosDiff.Z^2)^0.5
+		--	local BottomCutted = Vector3.new(RelPosDiff.X,BottomCap,RelPosDiff.Z)
+		--	--print(BottomCap)
+		--	Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),BottomCutted)
+		--	if BottomCap < 40000 then
+		--		break
+		--	end
+		--end
+		local Flight = true
+		PriPart.Touched:Connect(function(part)
+			Flight = false
+			if (PriPart.AssemblyLinearVelocity - part.AssemblyLinearVelocity).Magnitude>69 then
+				local E = Instance.new("Explosion")
+				E.Parent = workspace
+				E.Position = PriPart.Position
+				E.DestroyJointRadiusPercent = 1
+				E.BlastRadius = 50
+				E.BlastPressure = 10000
+				E.Hit:Connect(function(part)
+					for i,v in ipairs(part:GetDescendants()) do
+						if v:IsA("Script") then
+							v.Enabled = false
+						elseif v:IsA("VectorForce") then
+							v.Enabled = false
+						end
+					end
+				end)
+			end
+		end)
+
+		print("Cancel Phase")
+		--AWeight = 1
+		--Warning!! this is a Beizer derivitive
+		local function Beizer(N,Point,limit)
+			local p0 = PriPart.Position
+			local p1 = PriPart.Position+PriPart.AssemblyLinearVelocity*3
+			local p2 = Point
+			local p3 = Point
+			local function RB(t)
+				return ((1-t)^3)*p0 + (3*(1-t)^2)*t*p1 + 3*(1-t)*(t^2)*p2 + (t^3)*p3
+			end
+			local DT = (RB(1/N)-RB(0)) -- Vel/s
+			DT = DT.Magnitude/PriPart.AssemblyLinearVelocity.Magnitude -- Vel multiplier
+			--print(DT)
+			--DT = DT
+			--print(DT)
+			local points = {}
+			--local N = 200
+			for t = 0,limit,1/N do
+				table.insert(points,RB(t))
 			local NP = Instance.new("Part",workspace)
-			NP.Size = Vector3.new(10,10,10)
+			NP.Size = Vector3.new(1,1,1)
 			NP.CanCollide = false
 			NP.Anchored = true
 			NP.Position = points[#points]
 			NP.CanTouch = false
+			end
+			table.insert(points,p3)
+			local Accel = {}
+			for i=1,#points-2,1 do
+				local A = (points[i+2]-(2*points[i+1])+points[i])/(DT*DT)
+				--print(A)
+				table.insert(Accel,A+Vector3.new(0,G0,0)) -- Accel Multiplier+G0
+				--print(Accel[#Accel]-Vector3.new(0,G0,0))
+			end	
+			return DT,Accel
 		end
-		table.insert(points,p3)
-		local Accel = {}
-		for i=1,#points-2,1 do
-			local A = (points[i+2]-(2*points[i+1])+points[i])/(DT*DT)
-			--print(A)
-			table.insert(Accel,A+Vector3.new(0,G0,0)) -- Accel Multiplier+G0
-			--print(Accel[#Accel]-Vector3.new(0,G0,0))
-		end	
-		return DT,Accel
-	end
+	--[[I GIVE UP
 	--D = v*t + 1/2*a*t^2
 
 
@@ -1139,5 +1196,66 @@ function RTLS(PriPart)
 	wait(0.2)
 	Obj["NG"]:Destroy()
 	--script.RetroBT.Value.Parent.engineflame.ParticleEmitter.Enabled = false
-	--ShutEngines()
+	--ShutEngines()]]
+		--local  = EvalMass(PriPart.Parent)
+		StartEngines()
+		while (Target.Position-PriPart.Position).Magnitude >300  do
+			print("Loop")
+			local DT,Accel=Beizer(200,Target.Position+Vector3.new(0,300,0),0.1)
+			print(DT)
+			for i = 1,15,1 do
+				Mass = getmass(PriPart.Parent)
+				Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),Accel[i])
+				--print(math.round(Accel[i].X),math.round(Accel[i].Y),math.round(Accel[i].Z))
+				local Trust = Mass*math.clamp(Accel[i].Magnitude,0,500)--*0.5*math.clamp(PriPart.AssemblyLinearVelocity.Magnitude/200,0.5,1)
+				Obj["NV"].Force = Vector3.new(0,0,-Trust)
+				task.wait(DT)
+				--print(Trust)
+				--script.Parent.Attachment.ParticleEmitter.Rate = Accel[i].Magnitude
+			end
+		end
+		print("Exit")
+		
+		--for n =  4,0,-1 do
+		--	local DT,Accel=Beizer(200,Target.Position+Vector3.new(0,10*n+100,0),1)
+		--	--print(DT)
+		--	for i = 1,50,1 do
+		--		Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),Accel[i])
+		--		local Trust = script.Parent:GetMass()*Accel[i].Magnitude
+		--		Obj["NV"].Force = Vector3.new(0,0,-Trust)
+		--		--print(v)
+		--		task.wait(1/DT)
+		--		print(Trust)
+		--		--script.Parent.Attachment.ParticleEmitter.Rate = Accel[i].Magnitude
+		--	end
+		--end
+		local TS = game:GetService("TweenService")
+		local TO = TweenInfo.new(3,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
+		for i,v in ipairs(PriPart:FindFirstChild("Legs"):GetChildren()) do
+			local att = v.Value:FindFirstChild("Attachment")
+			local ang = v.Value:FindFirstChild("Angle").Value
+			print(att,ang)
+			TS:Create(att,TO,{["CFrame"]=att.CFrame*CFrame.Angles(math.rad(ang),0,0)}):Play()
+		end
+		while Flight  do
+			print("Loop")
+			local DT,Accel=Beizer(200,Target.Position,0.1)
+			print(DT)
+			for i = 1,15,1 do
+				Mass = getmass(PriPart.Parent)
+				Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),Accel[i])
+				--print(math.round(Accel[i].X),math.round(Accel[i].Y),math.round(Accel[i].Z))
+				local Trust = Mass*math.clamp(Accel[i].Magnitude,0,500)*math.clamp(PriPart.AssemblyLinearVelocity.Magnitude/50,0.7,1)
+				Obj["NV"].Force = Vector3.new(0,0,-Trust)
+				task.wait(DT)
+				--print(Trust)
+				--script.Parent.Attachment.ParticleEmitter.Rate = Accel[i].Magnitude
+			end
+		end
+		Obj["NV"].Force = Vector3.new(0,0,0)
+		Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),Vector3.new(0,1,0))
+		StopEngines()
+		print("Touchdown")
+	end)
+	coroutine.resume(Reentry)
 end
