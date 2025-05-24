@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.1-0")
+print("RD-3.0-5")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -22,7 +22,7 @@ function WeldModel(model)
 			if ( v:FindFirstChildWhichIsA("Attachment") or v:FindFirstChildWhichIsA("WeldConstraint") ) and not v.Anchored then
 				Weld = false
 			end
-			if v.Parent.Name == "KuelDriver" then
+			if v.Parent.Name == "KuelDriver" or v.Parent.Name == "KdhesiveDecoupler2" then
 				Weld = false
 			end
 			--print(Weld)
@@ -1026,7 +1026,7 @@ function RTLS(PriPart)
 			--local HeightToFall = PriPart.Position.Y - 30000
 			local a = G0/2
 			local b = -PriPart.AssemblyLinearVelocity.Y
-			local c = -(PriPart.Position.Y-Target.Position.Y-10000)
+			local c = -(PriPart.Position.Y-Target.Position.Y-1000)
 			--local TimeToFall = (-b-math.sqrt(b^2-4*a*c))/(2*a) -------------------fix someday
 			local TimeToFall = (-b+math.sqrt(b^2-4*a*c))/(2*a)
 			--print((-b+math.sqrt(b^2-4*a*c))/(2*a))
@@ -1065,30 +1065,10 @@ function RTLS(PriPart)
 			descendant.AssemblyLinearVelocity = TargetVelocity
 		end
 	end]]
-		RequestTWR(0)
-		print("Balistic phase")
-		while PriPart.Position.Y > 12000 do
-			wait(0.2)
-			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
-		end
-		--script.Parent.aeropart.Gyro1.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
-		--print("Glide phase")
-		--script.Parent.Fin.Value = true
-		x=[[script.Parent.aeropart.Script.Disabled = false]]
-		--while wait() do
-		--	local RelPosDiff =Target.Position-PriPart.Position
-		--	local BottomCap =(RelPosDiff.X^2+RelPosDiff.Z^2)^0.5
-		--	local BottomCutted = Vector3.new(RelPosDiff.X,BottomCap,RelPosDiff.Z)
-		--	--print(BottomCap)
-		--	Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),BottomCutted)
-		--	if BottomCap < 40000 then
-		--		break
-		--	end
-		--end
 		local Flight = true
 		PriPart.Touched:Connect(function(part)
 			Flight = false
-			if (PriPart.AssemblyLinearVelocity - part.AssemblyLinearVelocity).Magnitude>69 then
+			if (PriPart.AssemblyLinearVelocity - part.AssemblyLinearVelocity).Magnitude>50 then
 				local E = Instance.new("Explosion")
 				E.Parent = workspace
 				E.Position = PriPart.Position
@@ -1106,8 +1086,37 @@ function RTLS(PriPart)
 				end)
 			end
 		end)
-
+		RequestTWR(0)
+		print("Balistic phase")
+		while PriPart.Position.Y/math.clamp(-PriPart.AssemblyLinearVelocity.Y,1,math.huge) > 20 do
+			wait(0.2)
+			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
+		end
+		--script.Parent.aeropart.Gyro1.BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
+		--print("Glide phase")
+		--script.Parent.Fin.Value = true
+		x=[[script.Parent.aeropart.Script.Disabled = false]]
+		--while wait() do
+		--	local RelPosDiff =Target.Position-PriPart.Position
+		--	local BottomCap =(RelPosDiff.X^2+RelPosDiff.Z^2)^0.5
+		--	local BottomCutted = Vector3.new(RelPosDiff.X,BottomCap,RelPosDiff.Z)
+		--	--print(BottomCap)
+		--	Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),BottomCutted)
+		--	if BottomCap < 40000 then
+		--		break
+		--	end
+		--end
 		print("Cancel Phase")
+		StartEngines()
+		while PriPart.AssemblyLinearVelocity.Magnitude > 500 do
+			Mass = getmass(PriPart.Parent)
+			local a = (PriPart.AssemblyLinearVelocity.Magnitude^2)/(((PriPart.Position.Y-5000)/PriPart.AssemblyLinearVelocity.Unit.Y)*2)
+			Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
+			Obj["NV"].Force = Vector3.new(0,0,a*Mass)
+			print(a)
+			task.wait(0.01)
+		end 
+		print("Terminal Guidance")
 		--AWeight = 1
 		--Warning!! this is a Beizer derivitive
 		local function Beizer(N,Point,limit)
@@ -1127,12 +1136,12 @@ function RTLS(PriPart)
 			--local N = 200
 			for t = 0,limit,1/N do
 				table.insert(points,RB(t))
-			local NP = Instance.new("Part",workspace)
+			--[[local NP = Instance.new("Part",workspace)
 			NP.Size = Vector3.new(1,1,1)
 			NP.CanCollide = false
 			NP.Anchored = true
 			NP.Position = points[#points]
-			NP.CanTouch = false
+			NP.CanTouch = false]]
 			end
 			table.insert(points,p3)
 			local Accel = {}
@@ -1198,7 +1207,6 @@ function RTLS(PriPart)
 	--script.RetroBT.Value.Parent.engineflame.ParticleEmitter.Enabled = false
 	--ShutEngines()]]
 		--local  = EvalMass(PriPart.Parent)
-		StartEngines()
 		while (Target.Position-PriPart.Position).Magnitude >300  do
 			print("Loop")
 			local DT,Accel=Beizer(200,Target.Position+Vector3.new(0,300,0),0.1)
