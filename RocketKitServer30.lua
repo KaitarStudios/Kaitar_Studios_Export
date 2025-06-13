@@ -519,7 +519,7 @@ local function functions(passedvalues)
 		end
 		print(ori)
 		NT:Cancel()
-		NT = TS:Create(NG,TO,{["AngularVelocity"]=passedvalues["Orientation"]})
+		NT = TS:Create(NG,TO,{["AngularVelocity"]=newori})
 		NT:Play()
 	end
 end
