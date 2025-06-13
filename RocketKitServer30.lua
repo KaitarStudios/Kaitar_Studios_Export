@@ -4,7 +4,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.3-0")
+print("RD-3.2-4")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -514,8 +514,8 @@ local function functions(passedvalues)
 	if ori then
 		--print("GitRot")
 		local newori = ori
-		if ori.Z < 0 then
-			newori = Vector3.new(ori.Y,ori.X,ori.Z)
+		if ori.Z < 0 and ori.X ~= 0 then
+			newori = Vector3.new(0,ori.X,0)
 		end
 		print(ori)
 		NT:Cancel()
