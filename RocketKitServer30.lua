@@ -510,8 +510,14 @@ local function functions(passedvalues)
 		end
 		table.remove(StageList,1)
 	end
-	if passedvalues["Orientation"] then
+	local ori = passedvalues["Orientation"]
+	if ori then
 		--print("GitRot")
+		local newori = ori
+		if ori.Z < 0 then
+			newori = Vector3.new(ori.Y,ori.X,ori.Z)
+		else
+		print(ori)
 		NT:Cancel()
 		NT = TS:Create(NG,TO,{["AngularVelocity"]=passedvalues["Orientation"]})
 		NT:Play()
