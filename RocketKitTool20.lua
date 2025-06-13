@@ -1,5 +1,5 @@
 --Kaitar Rocket Kit User GUI Initializer
-print("RD-G-1.1")
+print("RD-G-1.2")
 --------------------------------------------
 A = {32720608,149484300,16070025,33179988}
 B = {}
@@ -74,8 +74,8 @@ script.Parent.Klientdriver.RemoteEvent.OnServerEvent:Connect(function(plr,key,bo
 							ControlScreenScript.Pointer.Value = v
 							task.wait()
 							ControlScreenScript.Enabled = true
-							print(ControlScreen:FindFirstChildWhichIsA("Script"))
-							ControlScreen:FindFirstChildWhichIsA("Script").Enabled = true
+							--print(ControlScreen:FindFirstChildWhichIsA("Script"))
+							ControlScreen:FindFirstChild("KRKCGD").Enabled = true
 							--ControlScreen = script.Parent.StagingScreen:Clone()
 							--ControlScreen.Parent = plr.PlayerGui
 							--local ControlScreenScript = ControlScreen:FindFirstChildWhichIsA("LocalScript")
