@@ -585,7 +585,7 @@ local stepping = coroutine.create(function()
 			Dp = Vector3.new(0.01,0.01,0.01)
 		end
 		Dt =  (Dp.X+Dp.Y+Dp.Z)*0.33
-		if Dt ~= Dt or Dt > 1/Clockrate then
+		if Dt < 0 or Dt ~= Dt or Dt > 1/Clockrate then
 			Dt = 1/Clockrate
 		end
 		--print(EnabledEngines)
