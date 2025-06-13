@@ -69,10 +69,12 @@ script.Parent.Klientdriver.RemoteEvent.OnServerEvent:Connect(function(plr,key,bo
 
 							ControlScreen = script.Parent.StagingScreen:Clone()
 							ControlScreen.Parent = plr.PlayerGui
+							task.wait()
 							local ControlScreenScript = ControlScreen:FindFirstChildWhichIsA("LocalScript")
 							ControlScreenScript.Pointer.Value = v
 							task.wait()
 							ControlScreenScript.Enabled = true
+							print(ControlScreen:FindFirstChildWhichIsA("Script"))
 							ControlScreen:FindFirstChildWhichIsA("Script").Enabled = true
 							--ControlScreen = script.Parent.StagingScreen:Clone()
 							--ControlScreen.Parent = plr.PlayerGui
