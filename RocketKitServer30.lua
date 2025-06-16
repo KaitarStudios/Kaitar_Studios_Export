@@ -517,7 +517,7 @@ local function functions(passedvalues)
 	if ori then
 		--print("GitRot")
 		local newori = ori
-		if ori.Z < 0.5 and math.abs(ori.X)> 0.5 then
+		if ori.Z < 0.05 and math.abs(ori.X)> 0.05 then
 			newori = Vector3.new(0,ori.X,0)
 		end
 		print(ori)
