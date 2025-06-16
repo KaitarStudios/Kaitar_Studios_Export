@@ -168,7 +168,10 @@ function RequestFuel(fuelmangager,mass)
 		return false
 	end
 	--fuelmangager = script.Parent.Parent.Parent.Model2.KuelDriver
-	local Fpart = fuelmangager.Part
+	local Fpart = fuelmangager:FindFirstChild("Part")
+	if not Fpart then
+		return 0
+	end
 	local Scoop = mass/(Fpart:GetMass()/Fpart.Size.X)
 	--local Scoop = mass/fuelmangager.CurrentPhysicalProperties.Density/Fpart.Size.Y/Fpart.Size.Z
 	--print(Fpart.Size.X,Scoop)
