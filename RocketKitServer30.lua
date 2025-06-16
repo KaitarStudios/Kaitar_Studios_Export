@@ -609,22 +609,27 @@ local stepping = coroutine.create(function()
 			--print((RP1+Ox)*Throttle*workspace.Gravity)
 			--print(RP1,Ox)
 			local Flameout = false
+			local VF = EngineTable[1]:FindFirstChild("VectorForce")
+			if not VF then
+				EngineTable[8] = 0
+				warn("Despawn")
+			end
 			if EngineTable[8]>0 then --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Check
 				if RP1 and Ox then
 					if math.min(RP1,Ox) ~= 0 then
-						EngineTable[1].VectorForce.Force = Vector3.new((RP1+Ox)*Throttle*Impulse*G0*Clockrate,0,0)
+						VF.Force = Vector3.new((RP1+Ox)*Throttle*Impulse*G0*Clockrate,0,0)
 					else
 						Flameout = true
 					end
 				elseif RP1 then
 					if RP1 ~= 0 then
-						EngineTable[1].VectorForce.Force = Vector3.new(RP1*Impulse*Throttle*G0*Clockrate,0,0)
+						VF.Force = Vector3.new(RP1*Impulse*Throttle*G0*Clockrate,0,0)
 					else
 						Flameout = true
 					end
 				elseif Ox then
 					if Ox ~= 0 then
-						EngineTable[1].VectorForce.Force = Vector3.new(Ox*Impulse*Throttle*G0*Clockrate,0,0)
+						VF.Force = Vector3.new(Ox*Impulse*Throttle*G0*Clockrate,0,0)
 					else
 						Flameout = true	
 					end
@@ -632,10 +637,10 @@ local stepping = coroutine.create(function()
 					warn("Invalid Engine Configuration")
 				end
 			else
-				EngineTable[1].VectorForce.Force = Vector3.new(0,0,0)------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+				VF.Force = Vector3.new(0,0,0)------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			end
 			if Flameout then
-				EngineTable[1].VectorForce.Enabled = false
+				VF.Enabled = false
 				--table.remove(EnabledEngines,i)
 				EngineTable[8] = 0
 				StopEngine(EngineTable[1])
