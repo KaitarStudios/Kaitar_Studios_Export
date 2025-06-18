@@ -540,7 +540,12 @@ script.Parent.RemoteEvent.OnServerEvent:Connect(function(player,remote)
 	-------------------------------set network ownership
 	for i,v in ipairs(script.Parent.Parent.Parent:GetDescendants()) do
 		if v:IsA("BasePart") or v:IsA("UnionOperation") or v:IsA("MeshPart") then
-			v:SetNetworkOwner(player)
+			local s,m = pcall(function()
+				v:SetNetworkOwner(player)
+			end)
+			if not s then
+				warn(m)
+			end
 		end
 	end
 	------------------------------
