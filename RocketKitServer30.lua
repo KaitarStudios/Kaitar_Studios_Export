@@ -1106,9 +1106,40 @@ function RTLS(PriPart)
 			end
 		end)
 		RequestTWR(0)
-		while Pripart.Position.Y/math.clamp(-Pripart.AssemblyLinearVelocity.Y,1,math.huge)
+		local function Falltime()
+			return Pripart.Position.Y/math.clamp(-Pripart.AssemblyLinearVelocity.Y,1,math.huge)
+		end
+		print("Balistic phase")	
+		local TheoryCorr = 0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude
+		while TheoryCorr > 0 do -- 90 sps^2
+			wait(0.2)
+			TheoryCorr = 0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude	
+			print(TheoryCorr)
+		end
+		local function PredictDiff()
+			local V = (2*G0*(Pripart.Position.Y-Target.Position.Y)+(Pripart.AssemblyLinearVelocity.Y)^2)^0.5
+			local T = (V-Pripart.AssemblyLinearVelocity.Y)/G0
+			local Diff = (Target.Position-Pripart.Position)-Pripart.AssemblyLinearVelocity*T
+			Diff = Diff*Vector3.new(1,0,1)
+			return Diff
+		end
+		local FDiff = PredictDiff()
+		RequestTWR(200)
+		task.wait()
+		RequestTWR(200)
+		while FDiff.Magnitude < 900 do
+			if FDiff.Magnitude < 2000 do
+				RequestTWR(40)		
+			end
+			FDiff = PredictDiff()
+			task.wait()
+			Obj["NG"].CFrame = CFrame.lookAt(-Pripart.AssemblyLinearVelocity.Unit*200+Diff.Unit*200)
+		end
+		RequestTWR(0)
+		task.wait()
+		RequestTWR(0)
 		print("Reentry phase")
-		while PriPart.Position.Y/math.clamp(-PriPart.AssemblyLinearVelocity.Y,1,math.huge) > 20 do
+		while Falltime() > 20 do
 			wait(0.2)
 			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
 		end
