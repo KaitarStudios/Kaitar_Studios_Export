@@ -1106,7 +1106,8 @@ function RTLS(PriPart)
 			end
 		end)
 		RequestTWR(0)
-		print("Balistic phase")
+		while Pripart.Position.Y/math.clamp(-Pripart.AssemblyLinearVelocity.Y,1,math.huge)
+		print("Reentry phase")
 		while PriPart.Position.Y/math.clamp(-PriPart.AssemblyLinearVelocity.Y,1,math.huge) > 20 do
 			wait(0.2)
 			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
