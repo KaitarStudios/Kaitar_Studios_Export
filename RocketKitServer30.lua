@@ -9,7 +9,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.4")
+print("RD-3.5")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -249,8 +249,12 @@ function Seperatron(model)
 	end
 end
 ----------------------------------------------------------------
+function displayError(err)
+	warn("An error occurred!\nError:", err, "\nTraceback:", debug.traceback())
+end
+-------------------------------------------------
 function UseTrigger(obj)
-	local s,m = pcall(function()
+	local s,m = xpcall(function()
 			
 	print(obj)
 	if not obj then
@@ -309,7 +313,7 @@ function UseTrigger(obj)
 		end
 	end
 
-	end)
+	end,displayError,false)
 	if not s then
 		warn(m)
 	end
