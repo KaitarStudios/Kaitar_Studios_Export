@@ -801,7 +801,7 @@ local RCSburronText = {
 	{"Orbit Mode","Orbit Mode"},
 	{"Relative Velocity","World Velocity"},
 	{"Relative Position","World Position"},
-	{"RCS rotation","RCS translation","Z axis"}
+	{"RCS rotation","RCS translation","Z axis","Disabled"}
 }
 if pointer.Value.Mode.Value == 1 then
 	RCSFrame.TextButton1.BackgroundColor3=RCSFrame.TextButton1.TextButton.BackgroundColor3
