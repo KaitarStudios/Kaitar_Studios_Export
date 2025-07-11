@@ -9,7 +9,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.2-5.3")
+print("RD-3.3")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -279,6 +279,10 @@ function UseTrigger(obj)
 			--print("Sepatron")
 			obj:destroy()
 		end)
+		wait(2)
+		if obj then
+			obj:destroy()
+		end
 	elseif obj.Name == "Canister" then
 		ArmParachute(obj,Vector3.new(0.708, 0.269, 0.708)*40)
 	elseif obj.Name == "KrossSRB" then
