@@ -9,7 +9,7 @@ local G0 = 9.81/0.28
 --------------------------------------------
 local EnabledEngines = {}
 local StageList = {}
-print("RD-3.3")
+print("RD-3.4")
 --------------------------------------------
 local TS = game:GetService("TweenService")
 local TO = TweenInfo.new(1,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
@@ -250,6 +250,8 @@ function Seperatron(model)
 end
 ----------------------------------------------------------------
 function UseTrigger(obj)
+	local s,m = pcall(function()
+			
 	print(obj)
 	if not obj then
 		return
@@ -305,6 +307,11 @@ function UseTrigger(obj)
 		elseif obj:IsA("PrismaticConstraint") then
 			obj.Value = not obj.Value
 		end
+	end
+
+	end)
+	if not s then
+		warn(m)
 	end
 end
 -------------------------------------------------
