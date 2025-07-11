@@ -1,5 +1,5 @@
 --Kaitar Rocket Kit User GUI Initializer
-print("RD-G-1.2")
+print("RD-G-2.0")
 --------------------------------------------
 A = {32720608,149484300,16070025,33179988}
 B = {}
@@ -19,7 +19,7 @@ end
 -------------------------------
 --Kaitar Rocket Kit Client Tool Driver
 local CamPart
-local Walkspeed
+--local Walkspeed
 local activated = false
 local move
 local highlight
@@ -84,7 +84,7 @@ script.Parent.Klientdriver.RemoteEvent.OnServerEvent:Connect(function(plr,key,bo
 							--ControlScreenScript.Enabled = true
 							ControlScreen.Destroying:Connect(function()
 								ControlScreen = nil
-								human.WalkSpeed = Walkspeed
+								--human.WalkSpeed = Walkspeed
 							end)
 							return
 						end
@@ -120,8 +120,8 @@ script.Parent.Klientdriver.RemoteEvent.OnServerEvent:Connect(function(plr,key,bo
 			script.Parent.Klientdriver.RemoteEvent3:FireClient(plr,true)
 			CamPart.CanCollide = false
 
-			Walkspeed = human.WalkSpeed
-			human.WalkSpeed = 0
+			--Walkspeed = human.WalkSpeed
+			--human.WalkSpeed = 0
 
 			move = coroutine.create(function()
 				while CamPart do
@@ -194,7 +194,7 @@ script.Parent.Klientdriver.RemoteEvent.OnServerEvent:Connect(function(plr,key,bo
 
 			local human = plr.Character:FindFirstChildWhichIsA("Humanoid")
 			script.Parent.Klientdriver.RemoteEvent3:FireClient(plr,false)
-			human.WalkSpeed = Walkspeed
+			--human.WalkSpeed = Walkspeed
 			if CamPart then
 				CamPart:Destroy()
 			end
