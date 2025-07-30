@@ -20,7 +20,8 @@ local CloneGUI = nil
 local moderator = script.Moderator
 
 function AtmEquation()
-	return math.exp(-math.abs(Pripart.Position.Y)/50000)
+	--return math.exp(-math.abs(Pripart.Position.Y)/50000)
+	return 1
 end
 
 local grav = Pripart:GetAttribute("Gravity")
