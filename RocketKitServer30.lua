@@ -252,6 +252,35 @@ end
 function displayError(err)
 	warn("An error occurred!\nError:", err, "\nTraceback:", debug.traceback())
 end
+----------------------------------------------------------
+local NA = Instance.new("Attachment")
+NA.Parent = script.Parent
+local NG = Instance.new("AngularVelocity")
+NG.Parent = NA
+NG.RelativeTo = Enum.ActuatorRelativeTo.Attachment0
+NG.AngularVelocity = Vector3.new(0,0,0)
+NG.MaxTorque = 399999993722699776
+NG.Attachment0 = NA
+NG.Enabled = false
+------------------------------------------------
+local NV = Instance.new("VectorForce")
+NV.Attachment0 = NA
+NV.Parent = NA
+NV.ApplyAtCenterOfMass = true
+NV.RelativeTo = Enum.ActuatorRelativeTo.World
+NV.Enabled = true
+NV.Force = Vector3.new(0,0,0)
+--------------------------------------------------
+local NVel = Instance.new("LinearVelocity")
+NVel.Attachment0 = NA
+NVel.Parent = NA
+NVel.ForceLimitMode = Enum.ForceLimitMode.Magnitude
+NVel.MaxForce = 100000000
+NVel.ForceLimitsEnabled = true
+NVel.RelativeTo = Enum.ActuatorRelativeTo.World
+NVel.Enabled = false
+NVel.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+NVel.VectorVelocity = Vector3.new(0,0,0)
 -------------------------------------------------
 function UseTrigger(obj)
 	local s,m = xpcall(function()
@@ -299,6 +328,8 @@ function UseTrigger(obj)
 		else
 			RTLS(obj)
 		end
+	elseif obj == script.Parent then
+		NG.Enabled = true
 	else
 		if obj:IsA("BasePart") or obj:IsA("MeshPart") or obj:IsA("UnionOperation") or obj:IsA("TrussPart") then
 			obj.Transparency = 1-obj.Transparency
@@ -420,34 +451,6 @@ end
 --print(StageList)
 --table.remove(StageList,1)
 --print(StageList)
-local NA = Instance.new("Attachment")
-NA.Parent = script.Parent
-local NG = Instance.new("AngularVelocity")
-NG.Parent = NA
-NG.RelativeTo = Enum.ActuatorRelativeTo.Attachment0
-NG.AngularVelocity = Vector3.new(0,0,0)
-NG.MaxTorque = 399999993722699776
-NG.Attachment0 = NA
-NG.Enabled = true
-------------------------------------------------
-local NV = Instance.new("VectorForce")
-NV.Attachment0 = NA
-NV.Parent = NA
-NV.ApplyAtCenterOfMass = true
-NV.RelativeTo = Enum.ActuatorRelativeTo.World
-NV.Enabled = true
-NV.Force = Vector3.new(0,0,0)
---------------------------------------------------
-local NVel = Instance.new("LinearVelocity")
-NVel.Attachment0 = NA
-NVel.Parent = NA
-NVel.ForceLimitMode = Enum.ForceLimitMode.Magnitude
-NVel.MaxForce = 100000000
-NVel.ForceLimitsEnabled = true
-NVel.RelativeTo = Enum.ActuatorRelativeTo.World
-NVel.Enabled = false
-NVel.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
-NVel.VectorVelocity = Vector3.new(0,0,0)
 -----------------------------------------------
 --[[local NV2 = Instance.new("VectorForce")
 NV2.Attachment0 = NA
